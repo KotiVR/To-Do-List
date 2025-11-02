@@ -7,15 +7,20 @@ app.secret_key = "your_secret_key"
 
 # ------------------ DATABASE CONNECTION (Supabase PostgreSQL) ------------------
 def get_db_connection():
-    return psycopg2.connect(
-        host="db.ihbhargjqkyohyroakgj.supabase.co",
-        port=5432,
-        user="postgres",
-        password="QznnLCZZX7mstMOo",
-        dbname="postgres",
-        sslmode="require",  # 🔒 required for Supabase
-        cursor_factory=psycopg2.extras.RealDictCursor
-    )
+    try:
+        conn = psycopg2.connect(
+            host="dpg-d43p61qli9vc73dcag8g-a",
+            port=5432,
+            user="koti",
+            password="6QilNot7hh7HqLr5D0xnMCHeS4FMsNRb",
+            dbname="todoflow_wih3",
+            sslmode="require",  # ✅ Required for Supabase
+            cursor_factory=psycopg2.extras.RealDictCursor
+        )
+        return conn
+    except Exception as e:
+        print("❌ Database connection failed:", e)
+        raise
 
 # ------------------ ROUTES ------------------
 
@@ -63,7 +68,7 @@ def register():
             flash("Registration successful! Please login.")
             return redirect(url_for("login"))
         except Exception as e:
-            print("Registration error:", e)
+            print("❌ Registration error:", e)
             flash("Email already registered or database error.")
             return render_template("register.html")
     return render_template("register.html")
@@ -123,7 +128,7 @@ def mytasks():
         return redirect(url_for("login"))
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM tasks')
+    cursor.execute('SELECT * FROM tasks ORDER BY id ASC')
     tasks = cursor.fetchall()
     cursor.close()
     conn.close()

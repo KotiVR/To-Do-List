@@ -1,0 +1,322 @@
+/* ================================
+   🌊 ToDoFlow — Premium Cyan Theme v3
+   ================================ */
+
+/* --- Light Mode Colors --- */
+:root {
+  --bg: #f4fafb;
+  --text: #0f172a;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --accent1: #00e0ff; /* bright cyan */
+  --accent2: #00b3c6; /* teal cyan */
+  --border: rgba(0, 0, 0, 0.1);
+  --shadow: rgba(0, 0, 0, 0.08);
+  --pending: #00bcd4;
+  --completed: #26c6da;
+  --dropdown-bg: #ffffff;
+  --dropdown-text: #0f172a;
+  --dropdown-hover: #e0f7fa;
+}
+
+/* --- Dark Mode Colors --- */
+[data-theme="dark"] {
+  --bg: #07141d;
+  --text: #e2e8f0;
+  --card-bg: rgba(14, 25, 38, 0.92);
+  --accent1: #06e1ff;
+  --accent2: #00b8d4;
+  --border: rgba(255, 255, 255, 0.08);
+  --shadow: rgba(0, 0, 0, 0.7);
+  --pending: #00e5ff;
+  --completed: #29f1ff;
+  --dropdown-bg: #0e1a24;
+  --dropdown-text: #e2e8f0;
+  --dropdown-hover: #102635;
+}
+
+/* --- Global Reset --- */
+* {
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  transition: background 0.3s ease, color 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* --- Header --- */
+header {
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.25);
+}
+
+header h1 {
+  font-weight: 700;
+  font-size: 1.6rem;
+}
+
+header nav a,
+.nav-logout {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-weight: 600;
+  opacity: 0.95;
+  transition: all 0.25s ease;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+header nav a:hover,
+.nav-logout:hover {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+/* --- Main Container --- */
+main {
+  padding: 2.5rem 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+  animation: fadeIn 0.6s ease;
+}
+
+/* --- Cards --- */
+.card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 2rem;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 25px var(--shadow);
+  backdrop-filter: blur(14px);
+  margin-bottom: 2rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 35px rgba(0, 227, 255, 0.25);
+}
+
+/* --- Titles --- */
+h2 {
+  margin-top: 0;
+  font-weight: 700;
+  color: var(--text);
+  border-left: 5px solid var(--accent1);
+  padding-left: 10px;
+}
+
+/* --- Inputs & Forms --- */
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--text);
+  margin-bottom: 14px;
+  font-size: 1rem;
+  outline: none;
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border: 1px solid var(--accent1);
+  box-shadow: 0 0 10px var(--accent1);
+}
+
+/* --- Premium Dropdown --- */
+select.dropdown {
+  background-color: var(--dropdown-bg);
+  color: var(--dropdown-text);
+  border: 1px solid var(--accent1);
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg fill='%2300e0ff' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  box-shadow: 0 0 10px rgba(0, 238, 255, 0.25);
+  transition: all 0.3s ease;
+}
+select.dropdown:hover {
+  background-color: var(--dropdown-hover);
+  box-shadow: 0 0 20px rgba(0, 238, 255, 0.4);
+  transform: translateY(-1px);
+}
+select.dropdown:focus {
+  border-color: var(--accent2);
+  box-shadow: 0 0 25px rgba(0, 238, 255, 0.8);
+}
+select.dropdown option {
+  background: var(--dropdown-bg);
+  color: var(--dropdown-text);
+  padding: 10px;
+  font-weight: 500;
+}
+
+/* --- Buttons --- */
+.btn,
+button,
+input[type="submit"] {
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 14px rgba(0, 227, 255, 0.4);
+  animation: glowPulse 3s infinite ease-in-out;
+}
+.btn:hover,
+button:hover,
+input[type="submit"]:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 227, 255, 0.6);
+}
+
+/* --- Delete / Edit Buttons --- */
+.delete-btn {
+  background: #13202b;
+  color: white;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  animation: glowPulse 4s infinite ease-in-out;
+}
+[data-theme="dark"] .delete-btn {
+  background: #1e2b35;
+}
+.delete-btn:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 600;
+  color: white;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 0 10px rgba(0, 238, 255, 0.3);
+  animation: glowPulse 4s infinite ease-in-out;
+}
+.edit-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+/* --- Status Buttons --- */
+.status-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+  transition: all 0.25s ease;
+}
+.status-btn.pending {
+  background: linear-gradient(135deg, var(--pending), var(--accent1));
+  box-shadow: 0 4px 10px rgba(0, 227, 255, 0.3);
+}
+.status-btn.completed {
+  background: linear-gradient(135deg, var(--accent1), var(--completed));
+  box-shadow: 0 4px 10px rgba(0, 238, 255, 0.4);
+}
+.status-btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+/* --- Back Button --- */
+.back-btn {
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: white;
+  border-radius: 12px;
+  padding: 10px 16px;
+  text-decoration: none;
+  box-shadow: 0 5px 14px rgba(0, 238, 255, 0.35);
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+.back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 238, 255, 0.5);
+}
+
+/* --- Dark Mode Toggle --- */
+#theme-toggle {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 238, 255, 0.4);
+  transition: all 0.25s ease;
+  animation: glowPulse 4s infinite ease-in-out;
+}
+#theme-toggle:hover {
+  transform: rotate(12deg) scale(1.05);
+  box-shadow: 0 0 25px rgba(0, 238, 255, 0.8);
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(0, 238, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(0, 238, 255, 0.7);
+  }
+}

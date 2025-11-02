@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Register | ToDoFlow</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>ToDoFlow</h1>
+    <nav>
+      <a href="{{ url_for('login') }}">🔑 Login</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>📝 Register</h2>
+      <form method="post">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="password" name="confirm_password" placeholder="Confirm password" required>
+        <input type="text" name="designation" placeholder="Designation (optional)">
+        <select name="gender" style="margin-top:10px;">
+          <option value="">Select gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+        <input type="text" name="college" placeholder="College (optional)">
+        <input type="text" name="company" placeholder="Company (optional)">
+        <input type="submit" value="Register" class="btn">
+      </form>
+      <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+    </div>
+  </main>
+
+  <button id="theme-toggle">🌙</button>
+  <script>
+    const btn = document.getElementById("theme-toggle");
+    btn.onclick = () => {
+      const html = document.documentElement;
+      const dark = html.getAttribute("data-theme") === "dark";
+      html.setAttribute("data-theme", dark ? "light" : "dark");
+      btn.textContent = dark ? "🌙" : "☀️";
+    };
+  </script>
+</body>
+</html>

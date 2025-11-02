@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Login | ToDoFlow</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>ToDoFlow</h1>
+    <nav>
+      <a href="{{ url_for('register') }}">📝 Register</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>🔐 Login</h2>
+      <form method="post">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="pass" placeholder="Password" required>
+        <input type="submit" value="Login" class="btn">
+      </form>
+      <p>Don't have an account? <a href="{{ url_for('register') }}">Register</a></p>
+    </div>
+  </main>
+
+  <button id="theme-toggle">🌙</button>
+  <script>
+    const btn = document.getElementById("theme-toggle");
+    btn.onclick = () => {
+      const html = document.documentElement;
+      const dark = html.getAttribute("data-theme") === "dark";
+      html.setAttribute("data-theme", dark ? "light" : "dark");
+      btn.textContent = dark ? "🌙" : "☀️";
+    };
+  </script>
+</body>
+</html>

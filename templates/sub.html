@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Subscription | ToDoFlow</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Subscription Plans</h1>
+    <nav>
+      <a href="{{ url_for('profile') }}">Profile</a>
+      <a href="{{ url_for('home') }}">Home</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Choose Your Plan</h2>
+      <ul>
+        <li><strong>Free:</strong> Basic features, limited tasks</li>
+        <li><strong>Pro:</strong> Unlimited tasks, reminders</li>
+      </ul>
+    </div>
+  </main>
+
+  <button id="theme-toggle">🌗</button>
+
+  <script>
+    const toggle = document.getElementById("theme-toggle");
+    if (localStorage.getItem("theme") === "dark") {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+    toggle.addEventListener("click", () => {
+      const current = document.documentElement.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+    });
+  </script>
+</body>
+</html>

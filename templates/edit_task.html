@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Task | ToDoFlow</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Edit Task</h1>
+    <nav>
+      <a href="{{ url_for('profile') }}">Profile</a>
+      <a href="{{ url_for('home') }}">Home</a>
+      <form action="{{ url_for('logout') }}" method="post" style="display:inline;">
+        <button type="submit" class="btn">Logout</button>
+      </form>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Update Task</h2>
+      <form method="POST">
+        <label><strong>Task Name</strong></label>
+        <input type="text" name="task_name" value="{{ task.task_name }}" required>
+
+        <label><strong>Notes</strong></label>
+        <textarea name="note" placeholder="Enter notes (optional)">{{ task.note }}</textarea>
+
+        <label for="status"><strong>Status</strong></label>
+        <select name="status" id="status" class="dropdown">
+          <option value="pending" {% if task.status == 'pending' %}selected{% endif %}>Pending</option>
+          <option value="completed" {% if task.status == 'completed' %}selected{% endif %}>Completed</option>
+        </select>
+
+        <input type="submit" value="💾 Save Changes" class="btn">
+      </form>
+      <a href="{{ url_for('mytasks') }}" class="back-btn">← Back to Tasks</a>
+    </div>
+  </main>
+
+  <button id="theme-toggle">🌗</button>
+
+  <script>
+    const toggle = document.getElementById("theme-toggle");
+    if (localStorage.getItem("theme") === "dark") {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+    toggle.addEventListener("click", () => {
+      const current = document.documentElement.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+    });
+  </script>
+</body>
+</html>

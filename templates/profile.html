@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile | ToDoFlow</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Your Profile</h1>
+    <nav>
+      <a href="{{ url_for('home') }}">Home</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Welcome, {{ user.username }} 👋</h2>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Gender:</strong> {{ user.gender }}</p>
+      <p><strong>Subscription:</strong> {{ user.subscription_type }}</p>
+    </div>
+
+    <a href="{{ url_for('mytasks') }}" class="back-btn">← Back to Tasks</a>
+  </main>
+
+  <button id="theme-toggle">🌗</button>
+
+  <script>
+    const toggle = document.getElementById("theme-toggle");
+    if (localStorage.getItem("theme") === "dark") {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+    toggle.addEventListener("click", () => {
+      const current = document.documentElement.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+    });
+  </script>
+</body>
+</html>

@@ -1,18 +1,19 @@
-import pymysql
+import psycopg2
+import psycopg2.extras
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
-# ------------------ DATABASE CONNECTION ------------------
+# ------------------ DATABASE CONNECTION (Supabase PostgreSQL) ------------------
 def get_db_connection():
-    return pymysql.connect(
-        host="127.0.0.1",
-        port=3306,
-        user="root",
-        password="yourpassword",  # replace with your real MySQL password
-        database="todoflow",
-        cursorclass=pymysql.cursors.DictCursor
+    return psycopg2.connect(
+        host="db.ihbhargjqkyohyroakgj.supabase.co",       # Example: "aws-0-ap-southeast-1.pooler.supabase.com"
+        port=5432,                       # Supabase default port
+        user="postgres",       # Example: "postgres"
+        password="QznnLCZZX7mstMOo",
+        dbname="postgres",               # Supabase default database name
+        cursor_factory=psycopg2.extras.RealDictCursor
     )
 
 # ------------------ ROUTES ------------------
@@ -24,7 +25,7 @@ def sub():
         return redirect(url_for("login"))
     return render_template("sub.html", user=user)
 
-# ✅ FIXED LOGOUT (works for both link and form)
+# ✅ FIXED LOGOUT
 @app.route("/logout", methods=["GET", "POST"])
 def logout():
     session.clear()
@@ -51,10 +52,10 @@ def register():
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
-            cursor.execute(
-                "INSERT INTO user (username, email, pass, identity, gender, college, company) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                (username, email, password, identity, gender, college, company),
-            )
+            cursor.execute("""
+                INSERT INTO "user" (username, email, pass, identity, gender, college, company)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (username, email, password, identity, gender, college, company))
             conn.commit()
             cursor.close()
             conn.close()
@@ -75,7 +76,7 @@ def login():
 
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM user WHERE email = %s AND pass = %s", (email, password))
+        cursor.execute('SELECT * FROM "user" WHERE email = %s AND pass = %s', (email, password))
         user = cursor.fetchone()
         cursor.close()
         conn.close()
@@ -97,7 +98,7 @@ def profile():
         return redirect(url_for("login"))
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT subscription_type FROM user WHERE email = %s", (user["email"],))
+    cursor.execute('SELECT subscription_type FROM "user" WHERE email = %s', (user["email"],))
     row = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -121,7 +122,7 @@ def mytasks():
         return redirect(url_for("login"))
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM task")
+    cursor.execute('SELECT * FROM task')
     tasks = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -142,7 +143,7 @@ def add_task():
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO task (task_name, status, note) VALUES (%s, %s, %s)",
+        'INSERT INTO task (task_name, status, note) VALUES (%s, %s, %s)',
         (task_name, "pending", note)
     )
     conn.commit()
@@ -166,15 +167,17 @@ def edit_task(task_id):
         new_note = request.form.get("note")
         new_status = request.form.get("status")
 
-        cursor.execute("UPDATE task SET task_name = %s, note = %s, status = %s WHERE id = %s",
-                       (new_name, new_note, new_status, task_id))
+        cursor.execute(
+            'UPDATE task SET task_name = %s, note = %s, status = %s WHERE id = %s',
+            (new_name, new_note, new_status, task_id)
+        )
         conn.commit()
         cursor.close()
         conn.close()
         flash("✅ Task updated successfully!")
         return redirect(url_for("mytasks"))
 
-    cursor.execute("SELECT * FROM task WHERE id = %s", (task_id,))
+    cursor.execute('SELECT * FROM task WHERE id = %s', (task_id,))
     task = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -190,7 +193,7 @@ def edit_task(task_id):
 def toggle_status(task_id):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT status FROM task WHERE id = %s", (task_id,))
+    cursor.execute('SELECT status FROM task WHERE id = %s', (task_id,))
     task = cursor.fetchone()
 
     if not task:
@@ -198,7 +201,7 @@ def toggle_status(task_id):
         return redirect(url_for("mytasks"))
 
     new_status = "completed" if task["status"] == "pending" else "pending"
-    cursor.execute("UPDATE task SET status = %s WHERE id = %s", (new_status, task_id))
+    cursor.execute('UPDATE task SET status = %s WHERE id = %s', (new_status, task_id))
     conn.commit()
     cursor.close()
     conn.close()
@@ -210,7 +213,7 @@ def toggle_status(task_id):
 def delete_task(task_id):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM task WHERE id = %s", (task_id,))
+    cursor.execute('DELETE FROM task WHERE id = %s', (task_id,))
     conn.commit()
     cursor.close()
     conn.close()
@@ -225,7 +228,7 @@ def api_get_tasks():
         return {"error": "Not logged in"}, 401
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, task_name, status, note FROM task")
+    cursor.execute('SELECT id, task_name, status, note FROM task')
     tasks = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -244,10 +247,10 @@ def api_post_tasks():
     tasks = data.get("tasks", [])
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM task")
+    cursor.execute('DELETE FROM task')
     for task in tasks:
         cursor.execute(
-            "INSERT INTO task (task_name, status, note) VALUES (%s, %s, %s)",
+            'INSERT INTO task (task_name, status, note) VALUES (%s, %s, %s)',
             (task.get("task", ""), task.get("status1", "pending"), task.get("notes", "")),
         )
     conn.commit()

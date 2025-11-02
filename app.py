@@ -5,15 +5,15 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
-# ------------------ DATABASE CONNECTION (Supabase PostgreSQL) ------------------
+# ------------------ DATABASE CONNECTION (Neon PostgreSQL) ------------------
 def get_db_connection():
     return psycopg2.connect(
-        host="db.ihbhargjqkyohyroakgj.supabase.co",
+        host="ep-falling-grass-a40q9cy3-pooler.us-east-1.aws.neon.tech",          # e.g. ep-calm-dawn-12345.ap-southeast-1.aws.neon.tech
         port=5432,
-        user="postgres",
-        password="QznnLCZZX7mstMOo",
-        dbname="postgres",
-        sslmode="require",  # 🔒 required for Supabase
+        user="neondb_owner",          # e.g. neondb_owner
+        password="npg_VSt5nCNLq1Ak",  # from Neon dashboard
+        dbname="todoflow",    # e.g. neondb
+        sslmode="require",                   # required for Neon
         cursor_factory=psycopg2.extras.RealDictCursor
     )
 
@@ -53,10 +53,10 @@ def register():
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
-            cursor.execute(
-                'INSERT INTO users (username, email, pass, identity, gender, college, company) VALUES (%s, %s, %s, %s, %s, %s, %s)',
-                (username, email, password, identity, gender, college, company),
-            )
+            cursor.execute("""
+                INSERT INTO users (username, email, pass, identity, gender, college, company)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (username, email, password, identity, gender, college, company))
             conn.commit()
             cursor.close()
             conn.close()

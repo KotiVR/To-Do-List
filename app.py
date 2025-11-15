@@ -5,14 +5,14 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
-# ------------------ DATABASE CONNECTION ------------------
+# ------------------ DATABASE CONNECTION (Neon PostgreSQL) ------------------
 def get_db_connection():
     return psycopg2.connect(
         host="ep-falling-grass-a40q9cy3-pooler.us-east-1.aws.neon.tech",
         port=5432,
         user="neondb_owner",
         password="npg_VSt5nCNLq1Ak",
-        dbname="todoflow",
+        dbname="todoflow",   # <-- make sure this matches the database where your users/tasks tables exist
         sslmode="require",
         cursor_factory=psycopg2.extras.RealDictCursor
     )

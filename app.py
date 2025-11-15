@@ -258,6 +258,12 @@ def api_post_tasks():
     cursor.close()
     conn.close()
     return {"success": True}
+#-------------------- HELP --------------------
+
+@app.route("/help")
+def help_page():
+    return render_template("help.html")
+
 
 # ------------------ RUN APP ------------------
 if __name__ == "__main__":

@@ -4,14 +4,82 @@
   <meta charset="UTF-8">
   <title>Subscription | ToDoFlow</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <style>
+    /* 3-Dots Menu (same as Home) */
+
+    .menu-container {
+      position: fixed;
+      top: 18px;
+      right: 22px;
+      z-index: 500;
+    }
+
+    .menu-button {
+      font-size: 26px;
+      padding: 6px 10px;
+      border-radius: 12px;
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: 0.2s ease;
+      user-select: none;
+    }
+
+    .menu-button:hover {
+      background: var(--hover);
+      transform: scale(1.05);
+    }
+
+    .menu-dropdown {
+      position: absolute;
+      right: 0;
+      margin-top: 8px;
+      width: 170px;
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 6px 0;
+      box-shadow: var(--shadow-strong);
+      display: none;
+      animation: fadeIn 0.15s ease;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-6px);}
+      to   {opacity: 1; transform: translateY(0);}
+    }
+
+    .menu-item {
+      padding: 12px 18px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.2s;
+      color: var(--text);
+      text-decoration: none;
+      display: block;
+    }
+
+    .menu-item:hover {
+      background: var(--hover);
+    }
+  </style>
 </head>
+
 <body>
+
+  <!-- Dropdown Menu -->
+  <div class="menu-container">
+    <div class="menu-button">⋮</div>
+    <div class="menu-dropdown">
+      <a href="{{ url_for('home') }}" class="menu-item">Home</a>
+      <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
+      <div class="menu-item theme-toggle">Toggle Theme</div>
+      <a href="{{ url_for('logout') }}" class="menu-item">Logout</a>
+    </div>
+  </div>
+
   <header>
     <h1>Subscription Plans</h1>
-    <nav>
-      <a href="{{ url_for('profile') }}">Profile</a>
-      <a href="{{ url_for('home') }}">Home</a>
-    </nav>
   </header>
 
   <main>
@@ -24,24 +92,33 @@
     </div>
   </main>
 
-  <!-- Theme Toggle -->
-  <button id="theme-toggle">🌗</button>
-
   <script>
-    const toggle = document.getElementById("theme-toggle");
+    // Menu
+    const menuBtn = document.querySelector(".menu-button");
+    const menuDropdown = document.querySelector(".menu-dropdown");
 
-    // Load saved theme
-    if (localStorage.getItem("theme") === "dark") {
-      document.documentElement.setAttribute("data-theme", "dark");
-    }
+    menuBtn.addEventListener("click", () => {
+      menuDropdown.style.display =
+        menuDropdown.style.display === "block" ? "none" : "block";
+    });
 
-    // Toggle theme
-    toggle.addEventListener("click", () => {
+    document.addEventListener("click", (e) => {
+      if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
+        menuDropdown.style.display = "none";
+      }
+    });
+
+    // Theme
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
+
+    document.querySelector(".theme-toggle").addEventListener("click", () => {
       const current = document.documentElement.getAttribute("data-theme");
       const next = current === "dark" ? "light" : "dark";
       document.documentElement.setAttribute("data-theme", next);
       localStorage.setItem("theme", next);
     });
   </script>
+
 </body>
 </html>

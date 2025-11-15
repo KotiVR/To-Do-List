@@ -5,6 +5,7 @@
   <title>Register | ToDoFlow</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
   <header>
     <h1>ToDoFlow</h1>
@@ -16,9 +17,11 @@
   <main>
     <div class="card">
       <h2>📝 Register</h2>
+
       <form method="post">
         <input type="text" name="username" placeholder="Username" required>
         <input type="email" name="email" placeholder="Email" required>
+
         <input type="password" name="password" placeholder="Password" required>
         <input type="password" name="confirm_password" placeholder="Confirm Password" required>
 
@@ -37,7 +40,10 @@
         <input type="submit" value="Register" class="btn">
       </form>
 
-      <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+      <p>
+        Already have an account?
+        <a href="{{ url_for('login') }}">Login</a>
+      </p>
     </div>
   </main>
 
@@ -48,17 +54,18 @@
     const toggle = document.getElementById("theme-toggle");
 
     // Load saved theme
-    if (localStorage.getItem("theme") === "dark") {
-      document.documentElement.setAttribute("data-theme", "dark");
-    }
+    const saved = localStorage.getItem("theme");
+    if (saved) document.documentElement.setAttribute("data-theme", saved);
 
     // Toggle theme
     toggle.addEventListener("click", () => {
       const current = document.documentElement.getAttribute("data-theme");
       const next = current === "dark" ? "light" : "dark";
+
       document.documentElement.setAttribute("data-theme", next);
       localStorage.setItem("theme", next);
     });
   </script>
+
 </body>
 </html>

@@ -5,12 +5,14 @@
   <title>My Tasks | ToDoFlow</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
   <header>
     <h1>My Tasks</h1>
     <nav>
       <a href="{{ url_for('profile') }}">Profile</a>
       <a href="{{ url_for('home') }}">Home</a>
+
       <form action="{{ url_for('logout') }}" method="post" style="display:inline;">
         <button type="submit" class="nav-logout">Logout</button>
       </form>
@@ -22,6 +24,7 @@
     <!-- Add Task -->
     <div class="card">
       <h2>Add a New Task</h2>
+
       <form action="{{ url_for('add_task') }}" method="post">
         <input type="text" name="task_name" placeholder="Enter task name..." required>
         <textarea name="note" placeholder="Add notes (optional)"></textarea>
@@ -29,7 +32,7 @@
       </form>
     </div>
 
-    <!-- Your Tasks -->
+    <!-- Task List -->
     <div class="card">
       <h2>Your Tasks</h2>
 
@@ -37,24 +40,31 @@
         {% for task in tasks %}
         <div class="task-row {% if task.status == 'completed' %}completed-task{% endif %}">
           
+          <!-- Task Text -->
           <div>
             <strong>{{ task.task_name }}</strong><br>
             <small>{{ task.note }}</small><br>
 
-            <small>Status:
-              <span style="color: {% if task.status == 'completed' %}#00b894{% else %}#e67e22{% endif %};
-                           font-weight: bold;">
+            <small>
+              Status:
+              <span style="
+                color: {% if task.status == 'completed' %}#00b894{% else %}#e67e22{% endif %};
+                font-weight: bold;">
                 {{ task.status|capitalize }}
               </span>
             </small>
           </div>
 
-          <!-- Actions -->
+          <!-- Buttons -->
           <div class="task-actions">
 
             <form action="{{ url_for('toggle_status', task_id=task.id) }}" method="post" style="display:inline;">
               <button type="submit" class="status-btn">
-                {% if task.status == 'completed' %}Mark Pending{% else %}Mark Complete{% endif %}
+                {% if task.status == 'completed' %}
+                  Mark Pending
+                {% else %}
+                  Mark Complete
+                {% endif %}
               </button>
             </form>
 
@@ -84,14 +94,13 @@
     const toggle = document.getElementById("theme-toggle");
     const root = document.documentElement;
 
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      root.setAttribute("data-theme", savedTheme);
-    }
+    const saved = localStorage.getItem("theme");
+    if (saved) root.setAttribute("data-theme", saved);
 
     toggle.addEventListener("click", () => {
       const current = root.getAttribute("data-theme");
       const next = current === "dark" ? "light" : "dark";
+
       root.setAttribute("data-theme", next);
       localStorage.setItem("theme", next);
     });

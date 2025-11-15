@@ -12,7 +12,7 @@ def get_db_connection():
         port=5432,
         user="neondb_owner",
         password="npg_VSt5nCNLq1Ak",
-        dbname="todoflow",   # <-- make sure this matches the database where your users/tasks tables exist
+        dbname="todoflow",
         sslmode="require",
         cursor_factory=psycopg2.extras.RealDictCursor
     )
@@ -82,7 +82,6 @@ def login():
         conn.close()
 
         if user:
-            # Store only required fields in session
             session["user"] = {
                 "id": user["id"],
                 "username": user["username"],
@@ -131,12 +130,11 @@ def mytasks():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT id, task_name, status, note FROM tasks WHERE user_id=%s', (user["id"],))
+    cursor.execute('SELECT id, task_name, status, note FROM tasks WHERE "user_id"=%s', (user["id"],))
     tasks = cursor.fetchall()
     cursor.close()
     conn.close()
 
-    # Ensure each task has defaults
     for t in tasks:
         if "status" not in t or not t["status"]:
             t["status"] = "pending"
@@ -148,7 +146,6 @@ def mytasks():
     return render_template("task.html", user=user, tasks=tasks)
 
 # ------------------ CRUD FOR TASKS ------------------
-
 @app.route("/add_task", methods=["POST"])
 def add_task():
     user = session.get("user")
@@ -161,7 +158,7 @@ def add_task():
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(
-        'INSERT INTO tasks (task_name, status, note, user_id) VALUES (%s, %s, %s, %s)',
+        'INSERT INTO tasks (task_name, status, note, "user_id") VALUES (%s, %s, %s, %s)',
         (task_name, "pending", note, user["id"])
     )
     conn.commit()
@@ -185,7 +182,7 @@ def edit_task(task_id):
         new_status = request.form.get("status")
 
         cursor.execute(
-            'UPDATE tasks SET task_name=%s, note=%s, status=%s WHERE id=%s AND user_id=%s',
+            'UPDATE tasks SET task_name=%s, note=%s, status=%s WHERE id=%s AND "user_id"=%s',
             (new_name, new_note, new_status, task_id, user["id"])
         )
         conn.commit()
@@ -194,7 +191,7 @@ def edit_task(task_id):
         flash("✅ Task updated successfully!")
         return redirect(url_for("mytasks"))
 
-    cursor.execute('SELECT * FROM tasks WHERE id=%s AND user_id=%s', (task_id, user["id"]))
+    cursor.execute('SELECT * FROM tasks WHERE id=%s AND "user_id"=%s', (task_id, user["id"]))
     task = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -213,7 +210,7 @@ def toggle_status(task_id):
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT status FROM tasks WHERE id=%s AND user_id=%s', (task_id, user["id"]))
+    cursor.execute('SELECT status FROM tasks WHERE id=%s AND "user_id"=%s', (task_id, user["id"]))
     task = cursor.fetchone()
 
     if not task:
@@ -223,7 +220,7 @@ def toggle_status(task_id):
         return redirect(url_for("mytasks"))
 
     new_status = "completed" if task["status"] == "pending" else "pending"
-    cursor.execute('UPDATE tasks SET status=%s WHERE id=%s AND user_id=%s', (new_status, task_id, user["id"]))
+    cursor.execute('UPDATE tasks SET status=%s WHERE id=%s AND "user_id"=%s', (new_status, task_id, user["id"]))
     conn.commit()
     cursor.close()
     conn.close()
@@ -238,7 +235,7 @@ def delete_task(task_id):
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('DELETE FROM tasks WHERE id=%s AND user_id=%s', (task_id, user["id"]))
+    cursor.execute('DELETE FROM tasks WHERE id=%s AND "user_id"=%s', (task_id, user["id"]))
     conn.commit()
     cursor.close()
     conn.close()
@@ -254,7 +251,7 @@ def api_get_tasks():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT id, task_name, status, note FROM tasks WHERE user_id=%s', (user["id"],))
+    cursor.execute('SELECT id, task_name, status, note FROM tasks WHERE "user_id"=%s', (user["id"],))
     tasks = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -276,11 +273,11 @@ def api_post_tasks():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('DELETE FROM tasks WHERE user_id=%s', (user["id"],))
+    cursor.execute('DELETE FROM tasks WHERE "user_id"=%s', (user["id"],))
 
     for task in tasks:
         cursor.execute(
-            'INSERT INTO tasks (task_name, status, note, user_id) VALUES (%s, %s, %s, %s)',
+            'INSERT INTO tasks (task_name, status, note, "user_id") VALUES (%s, %s, %s, %s)',
             (task.get("task", ""), task.get("status1", "pending"), task.get("notes", ""), user["id"])
         )
     conn.commit()

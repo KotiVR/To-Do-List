@@ -6,84 +6,90 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
   <style>
-    /* ----- 3-DOTS MENU STYLE ----- */
+    /* --- MODERN 3-DOTS MENU MATCHING style.css UI --- */
+
     .menu-container {
         position: fixed;
-        top: 20px;
-        right: 25px;
-        z-index: 999;
-        font-size: 24px;
-        cursor: pointer;
-        user-select: none;
+        top: 18px;
+        right: 22px;
+        z-index: 500;
     }
 
     .menu-button {
+        font-size: 26px;
         padding: 6px 10px;
-        border-radius: 8px;
-        transition: 0.2s;
+        border-radius: 12px;
+        background: var(--card-bg);
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        transition: 0.2s ease;
+        user-select: none;
     }
 
     .menu-button:hover {
-        background: #e3e3e3;
+        background: var(--hover);
+        transform: scale(1.05);
     }
 
     .menu-dropdown {
         position: absolute;
         right: 0;
-        margin-top: 6px;
-        background: white;
-        border-radius: 8px;
-        width: 150px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        overflow: hidden;
-        font-size: 16px;
+        margin-top: 8px;
+        width: 170px;
+        background: var(--card-bg);
+        border-radius: 14px;
+        padding: 6px 0;
+        box-shadow: var(--shadow-strong);
+        display: none;
+        animation: fadeIn 0.15s ease;
     }
 
-    .hidden {
-        display: none;
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(-6px);}
+        to {opacity: 1; transform: translateY(0);}
     }
 
     .menu-item {
-        padding: 10px 12px;
+        padding: 12px 18px;
+        font-size: 15px;
         cursor: pointer;
-        border-bottom: 1px solid #eee;
-    }
-
-    .menu-item:last-child {
-        border-bottom: none;
+        transition: 0.2s;
+        color: var(--text);
+        text-decoration: none;
+        display: block;
     }
 
     .menu-item:hover {
-        background: #f5f5f5;
+        background: var(--hover);
     }
 
-    /* ----- DARK MODE ----- */
-    body.dark {
-        background: #121212;
-        color: white;
+    /* DARK MODE VARIABLES (auto-match your style.css) */
+    :root {
+        --card-bg: #ffffff;
+        --text: #222;
+        --hover: #f1f1f1;
+        --shadow: 0 2px 8px rgba(0,0,0,0.15);
+        --shadow-strong: 0 4px 12px rgba(0,0,0,0.20);
     }
 
-    body.dark .menu-dropdown {
-        background: #1f1f1f;
-        color: white;
-        box-shadow: 0 4px 12px rgba(255,255,255,0.1);
-    }
-
-    body.dark .menu-item:hover {
-        background: #333;
+    [data-theme="dark"] {
+        --card-bg: #1a1a1a;
+        --text: #fff;
+        --hover: #2b2b2b;
+        --shadow: 0 2px 8px rgba(255,255,255,0.06);
+        --shadow-strong: 0 4px 12px rgba(255,255,255,0.1);
     }
   </style>
 </head>
 
 <body>
 
-  <!-- ====== TOP-RIGHT 3 DOTS MENU ====== -->
+  <!-- ====== BEAUTIFUL DROPDOWN MENU ====== -->
   <div class="menu-container">
       <div class="menu-button">⋮</div>
-
-      <div class="menu-dropdown hidden">
+      <div class="menu-dropdown">
           <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
-          <div class="menu-item theme-toggle">Theme</div>
+          <div class="menu-item theme-toggle">Toggle Theme</div>
           <div class="menu-item help-toggle">Help</div>
       </div>
   </div>
@@ -105,44 +111,37 @@
     </div>
   </main>
 
-  
-  <!-- ====== JS FOR MENU + THEME ====== -->
+  <!-- ====== MENU + THEME JS ====== -->
   <script>
     const menuBtn = document.querySelector(".menu-button");
     const menuDropdown = document.querySelector(".menu-dropdown");
 
     menuBtn.addEventListener("click", () => {
-        menuDropdown.classList.toggle("hidden");
+        menuDropdown.style.display =
+          menuDropdown.style.display === "block" ? "none" : "block";
     });
 
-    // Close when clicking outside
     document.addEventListener("click", (e) => {
         if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
-            menuDropdown.classList.add("hidden");
+            menuDropdown.style.display = "none";
         }
     });
 
-    // Theme toggle
-    const themeBtn = document.querySelector(".theme-toggle");
+    // Load theme
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
 
-    // Load saved theme
-    if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark");
-    }
-
-    themeBtn.addEventListener("click", () => {
-        document.body.classList.toggle("dark");
-
-        if (document.body.classList.contains("dark")) {
-            localStorage.setItem("theme", "dark");
-        } else {
-            localStorage.removeItem("theme");
-        }
+    // Toggle theme
+    document.querySelector(".theme-toggle").addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme");
+        const next = current === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
     });
 
-    // Help popup
+    // Help box
     document.querySelector(".help-toggle").addEventListener("click", () => {
-        alert("HELP:\n\n• Add Task: Go to My Tasks → Add Task\n• Update Task: Click Edit on a task\n• Delete Task: Click Delete next to a task");
+        alert("HELP:\n\n• Add Task → My Tasks → Add Task\n• Edit Task → Click Edit\n• Delete Task → Click Delete\n• Change Theme → Menu → Toggle Theme");
     });
   </script>
 

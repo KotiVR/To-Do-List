@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
-# ------------------ DATABASE CONNECTION (Neon PostgreSQL) ------------------
+# ------------------ DATABASE CONNECTION ------------------
 def get_db_connection():
     return psycopg2.connect(
         host="ep-falling-grass-a40q9cy3-pooler.us-east-1.aws.neon.tech",
@@ -54,9 +54,8 @@ def register():
             cursor = conn.cursor()
             cursor.execute("""
                 INSERT INTO users (username, email, pass, identity, gender, college, company)
-                VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
             """, (username, email, password, identity, gender, college, company))
-            user_id = cursor.fetchone()["id"]
             conn.commit()
             cursor.close()
             conn.close()
@@ -77,13 +76,18 @@ def login():
 
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM users WHERE email = %s AND pass = %s', (email, password))
+        cursor.execute('SELECT id, username, email FROM users WHERE email = %s AND pass = %s', (email, password))
         user = cursor.fetchone()
         cursor.close()
         conn.close()
 
         if user:
-            session["user"] = user
+            # Store only required fields in session
+            session["user"] = {
+                "id": user["id"],
+                "username": user["username"],
+                "email": user["email"]
+            }
             flash("Login successful!")
             return redirect(url_for("home"))
         else:
@@ -100,10 +104,11 @@ def profile():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT subscription_type FROM users WHERE id = %s', (user["id"],))
+    cursor.execute('SELECT subscription_type FROM users WHERE email = %s', (user["email"],))
     row = cursor.fetchone()
     cursor.close()
     conn.close()
+
     subscription_type = row["subscription_type"] if row and "subscription_type" in row else "Free"
     user["subscription_type"] = subscription_type
     return render_template("profile.html", user=user)
@@ -120,27 +125,34 @@ def home():
 @app.route("/mytasks")
 def mytasks():
     user = session.get("user")
-    if not user:
+    if not user or "id" not in user:
+        flash("User session invalid. Please login again.")
         return redirect(url_for("login"))
-
-    print("DEBUG SESSION USER:", user)  # Debug line
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM tasks WHERE user_id = %s', (user["id"],))
+    cursor.execute('SELECT id, task_name, status, note FROM tasks WHERE user_id=%s', (user["id"],))
     tasks = cursor.fetchall()
     cursor.close()
     conn.close()
+
+    # Ensure each task has defaults
+    for t in tasks:
+        if "status" not in t or not t["status"]:
+            t["status"] = "pending"
+        if "task_name" not in t or not t["task_name"]:
+            t["task_name"] = "Unnamed Task"
+        if "note" not in t:
+            t["note"] = ""
 
     return render_template("task.html", user=user, tasks=tasks)
 
 # ------------------ CRUD FOR TASKS ------------------
 
-# CREATE
 @app.route("/add_task", methods=["POST"])
 def add_task():
     user = session.get("user")
-    if not user:
+    if not user or "id" not in user:
         return redirect(url_for("login"))
 
     task_name = request.form.get("task_name")
@@ -158,11 +170,10 @@ def add_task():
     flash("Task added!")
     return redirect(url_for("mytasks"))
 
-# EDIT
 @app.route("/edit_task/<int:task_id>", methods=["GET", "POST"])
 def edit_task(task_id):
     user = session.get("user")
-    if not user:
+    if not user or "id" not in user:
         return redirect(url_for("login"))
 
     conn = get_db_connection()
@@ -194,11 +205,10 @@ def edit_task(task_id):
 
     return render_template("edit_task.html", task=task, user=user)
 
-# TOGGLE STATUS
 @app.route("/toggle_status/<int:task_id>", methods=["POST"])
 def toggle_status(task_id):
     user = session.get("user")
-    if not user:
+    if not user or "id" not in user:
         return redirect(url_for("login"))
 
     conn = get_db_connection()
@@ -220,11 +230,10 @@ def toggle_status(task_id):
     flash(f"Task marked as {new_status}!")
     return redirect(url_for("mytasks"))
 
-# DELETE
 @app.route("/delete_task/<int:task_id>", methods=["POST"])
 def delete_task(task_id):
     user = session.get("user")
-    if not user:
+    if not user or "id" not in user:
         return redirect(url_for("login"))
 
     conn = get_db_connection()
@@ -240,7 +249,7 @@ def delete_task(task_id):
 @app.route("/api/tasks", methods=["GET"])
 def api_get_tasks():
     user = session.get("user")
-    if not user:
+    if not user or "id" not in user:
         return {"error": "Not logged in"}, 401
 
     conn = get_db_connection()
@@ -259,7 +268,7 @@ def api_get_tasks():
 @app.route("/api/tasks", methods=["POST"])
 def api_post_tasks():
     user = session.get("user")
-    if not user:
+    if not user or "id" not in user:
         return {"error": "Not logged in"}, 401
 
     data = request.get_json()
@@ -274,7 +283,6 @@ def api_post_tasks():
             'INSERT INTO tasks (task_name, status, note, user_id) VALUES (%s, %s, %s, %s)',
             (task.get("task", ""), task.get("status1", "pending"), task.get("notes", ""), user["id"])
         )
-
     conn.commit()
     cursor.close()
     conn.close()

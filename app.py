@@ -54,8 +54,9 @@ def register():
             cursor = conn.cursor()
             cursor.execute("""
                 INSERT INTO users (username, email, pass, identity, gender, college, company)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id
             """, (username, email, password, identity, gender, college, company))
+            user_id = cursor.fetchone()["id"]
             conn.commit()
             cursor.close()
             conn.close()
@@ -96,9 +97,10 @@ def profile():
     user = session.get("user")
     if not user:
         return redirect(url_for("login"))
+
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT subscription_type FROM users WHERE email = %s', (user["email"],))
+    cursor.execute('SELECT subscription_type FROM users WHERE id = %s', (user["id"],))
     row = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -120,14 +122,16 @@ def mytasks():
     user = session.get("user")
     if not user:
         return redirect(url_for("login"))
-    
+
+    print("DEBUG SESSION USER:", user)  # Debug line
+
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM tasks WHERE user_id = %s', (user["id"],))
     tasks = cursor.fetchall()
     cursor.close()
     conn.close()
-    
+
     return render_template("task.html", user=user, tasks=tasks)
 
 # ------------------ CRUD FOR TASKS ------------------
@@ -238,14 +242,14 @@ def api_get_tasks():
     user = session.get("user")
     if not user:
         return {"error": "Not logged in"}, 401
-    
+
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('SELECT id, task_name, status, note FROM tasks WHERE user_id=%s', (user["id"],))
     tasks = cursor.fetchall()
     cursor.close()
     conn.close()
-    
+
     mapped_tasks = [
         {"id": t["id"], "task": t["task_name"], "status1": t["status"], "notes": t["note"]}
         for t in tasks
@@ -257,20 +261,20 @@ def api_post_tasks():
     user = session.get("user")
     if not user:
         return {"error": "Not logged in"}, 401
-    
+
     data = request.get_json()
     tasks = data.get("tasks", [])
-    
+
     conn = get_db_connection()
     cursor = conn.cursor()
-    # Clear only the current user's tasks
     cursor.execute('DELETE FROM tasks WHERE user_id=%s', (user["id"],))
-    
+
     for task in tasks:
         cursor.execute(
             'INSERT INTO tasks (task_name, status, note, user_id) VALUES (%s, %s, %s, %s)',
             (task.get("task", ""), task.get("status1", "pending"), task.get("notes", ""), user["id"])
         )
+
     conn.commit()
     cursor.close()
     conn.close()

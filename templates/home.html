@@ -88,10 +88,9 @@
   <div class="menu-container">
       <div class="menu-button">⋮</div>
       <div class="menu-dropdown">
-	  <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
           <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
           <div class="menu-item theme-toggle">Toggle Theme</div>
-          <div class="menu-item help-toggle">Help</div>
+          <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
           <a href="{{ url_for('logout') }}" class="menu-item">Logout</a>
       </div>
   </div>

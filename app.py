@@ -18,7 +18,6 @@ def get_db_connection():
     )
 
 # ------------------ ROUTES ------------------
-
 @app.route("/sub.html")
 def sub():
     user = session.get("user")
@@ -120,9 +119,9 @@ def mytasks():
     user = session.get("user")
     if not user:
         return redirect(url_for("login"))
-
     conn = get_db_connection()
     cursor = conn.cursor()
+    # Show only tasks for the logged-in user
     cursor.execute('SELECT * FROM tasks WHERE user_id = %s', (user["id"],))
     tasks = cursor.fetchall()
     cursor.close()
@@ -130,7 +129,6 @@ def mytasks():
     return render_template("task.html", user=user, tasks=tasks)
 
 # ------------------ CRUD FOR TASKS ------------------
-
 # CREATE
 @app.route("/add_task", methods=["POST"])
 def add_task():
@@ -143,6 +141,7 @@ def add_task():
 
     conn = get_db_connection()
     cursor = conn.cursor()
+    # Save task for this user only
     cursor.execute(
         'INSERT INTO tasks (task_name, status, note, user_id) VALUES (%s, %s, %s, %s)',
         (task_name, "pending", note, user["id"])
@@ -240,7 +239,7 @@ def api_get_tasks():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT id, task_name, status, note FROM tasks WHERE user_id = %s', (user["id"],))
+    cursor.execute('SELECT * FROM tasks WHERE user_id = %s', (user["id"],))
     tasks = cursor.fetchall()
     cursor.close()
     conn.close()

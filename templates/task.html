@@ -18,6 +18,8 @@
   </header>
 
   <main>
+
+    <!-- Add Task -->
     <div class="card">
       <h2>Add a New Task</h2>
       <form action="{{ url_for('add_task') }}" method="post">
@@ -27,14 +29,18 @@
       </form>
     </div>
 
+    <!-- Your Tasks -->
     <div class="card">
       <h2>Your Tasks</h2>
+
       {% if tasks %}
         {% for task in tasks %}
         <div class="task-row {% if task.status == 'completed' %}completed-task{% endif %}">
+          
           <div>
             <strong>{{ task.task_name }}</strong><br>
             <small>{{ task.note }}</small><br>
+
             <small>Status:
               <span style="color: {% if task.status == 'completed' %}#00b894{% else %}#e67e22{% endif %};
                            font-weight: bold;">
@@ -43,7 +49,9 @@
             </small>
           </div>
 
+          <!-- Actions -->
           <div class="task-actions">
+
             <form action="{{ url_for('toggle_status', task_id=task.id) }}" method="post" style="display:inline;">
               <button type="submit" class="status-btn">
                 {% if task.status == 'completed' %}Mark Pending{% else %}Mark Complete{% endif %}
@@ -55,7 +63,9 @@
             <form action="{{ url_for('delete_task', task_id=task.id) }}" method="post" style="display:inline;">
               <button type="submit" class="delete-btn">Delete</button>
             </form>
+
           </div>
+
         </div>
         {% endfor %}
       {% else %}
@@ -64,15 +74,20 @@
     </div>
 
     <a href="{{ url_for('home') }}" class="back-btn">← Back to Home</a>
+
   </main>
 
+  <!-- Theme Toggle -->
   <button id="theme-toggle">🌗</button>
 
   <script>
     const toggle = document.getElementById("theme-toggle");
     const root = document.documentElement;
+
     const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) root.setAttribute("data-theme", savedTheme);
+    if (savedTheme) {
+      root.setAttribute("data-theme", savedTheme);
+    }
 
     toggle.addEventListener("click", () => {
       const current = root.getAttribute("data-theme");
@@ -81,5 +96,6 @@
       localStorage.setItem("theme", next);
     });
   </script>
+
 </body>
 </html>

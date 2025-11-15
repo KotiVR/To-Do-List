@@ -25,13 +25,18 @@
     <a href="{{ url_for('mytasks') }}" class="back-btn">← Back to Tasks</a>
   </main>
 
+  <!-- Theme Toggle -->
   <button id="theme-toggle">🌗</button>
 
   <script>
     const toggle = document.getElementById("theme-toggle");
+
+    // Load saved theme
     if (localStorage.getItem("theme") === "dark") {
       document.documentElement.setAttribute("data-theme", "dark");
     }
+
+    // Toggle theme
     toggle.addEventListener("click", () => {
       const current = document.documentElement.getAttribute("data-theme");
       const next = current === "dark" ? "light" : "dark";

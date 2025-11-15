@@ -25,15 +25,26 @@
     </div>
   </main>
 
-  <button id="theme-toggle">🌙</button>
+  <!-- Theme Toggle -->
+  <button id="theme-toggle">🌗</button>
+
   <script>
-    const btn = document.getElementById("theme-toggle");
-    btn.onclick = () => {
-      const html = document.documentElement;
-      const dark = html.getAttribute("data-theme") === "dark";
-      html.setAttribute("data-theme", dark ? "light" : "dark");
-      btn.textContent = dark ? "🌙" : "☀️";
-    };
+    const toggle = document.getElementById("theme-toggle");
+
+    // Load saved theme
+    if (localStorage.getItem("theme") === "dark") {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+
+    // Toggle theme
+    toggle.addEventListener("click", () => {
+      const current = document.documentElement.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+    });
   </script>
+
 </body>
 </html>

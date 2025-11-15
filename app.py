@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
-# ------------------ DATABASE CONNECTION (Neon PostgreSQL) ------------------
+# ------------------ DATABASE CONNECTION ------------------
 def get_db_connection():
     return psycopg2.connect(
         host="ep-falling-grass-a40q9cy3-pooler.us-east-1.aws.neon.tech",
@@ -18,6 +18,7 @@ def get_db_connection():
     )
 
 # ------------------ ROUTES ------------------
+
 @app.route("/sub.html")
 def sub():
     user = session.get("user")
@@ -31,7 +32,6 @@ def logout():
     flash("You have been logged out.")
     return redirect(url_for("login"))
 
-# ------------------ REGISTER ------------------
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -66,7 +66,6 @@ def register():
             return render_template("register.html")
     return render_template("register.html")
 
-# ------------------ LOGIN ------------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -89,7 +88,6 @@ def login():
             return render_template("login.html")
     return render_template("login.html")
 
-# ------------------ PROFILE ------------------
 @app.route("/profile")
 def profile():
     user = session.get("user")
@@ -105,7 +103,6 @@ def profile():
     user["subscription_type"] = subscription_type
     return render_template("profile.html", user=user)
 
-# ------------------ HOME ------------------
 @app.route("/")
 def home():
     user = session.get("user")
@@ -121,15 +118,13 @@ def mytasks():
         return redirect(url_for("login"))
     conn = get_db_connection()
     cursor = conn.cursor()
-    # Show only tasks for the logged-in user
-    cursor.execute('SELECT * FROM tasks WHERE user_id = %s', (user["id"],))
+    cursor.execute('SELECT * FROM tasks')
     tasks = cursor.fetchall()
     cursor.close()
     conn.close()
     return render_template("task.html", user=user, tasks=tasks)
 
 # ------------------ CRUD FOR TASKS ------------------
-# CREATE
 @app.route("/add_task", methods=["POST"])
 def add_task():
     user = session.get("user")
@@ -141,10 +136,9 @@ def add_task():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    # Save task for this user only
     cursor.execute(
-        'INSERT INTO tasks (task_name, status, note, user_id) VALUES (%s, %s, %s, %s)',
-        (task_name, "pending", note, user["id"])
+        'INSERT INTO tasks (task_name, status, note) VALUES (%s, %s, %s)',
+        (task_name, "pending", note)
     )
     conn.commit()
     cursor.close()
@@ -152,7 +146,6 @@ def add_task():
     flash("Task added!")
     return redirect(url_for("mytasks"))
 
-# EDIT TASK
 @app.route("/edit_task/<int:task_id>", methods=["GET", "POST"])
 def edit_task(task_id):
     user = session.get("user")
@@ -168,8 +161,8 @@ def edit_task(task_id):
         new_status = request.form.get("status")
 
         cursor.execute(
-            'UPDATE tasks SET task_name = %s, note = %s, status = %s WHERE id = %s AND user_id = %s',
-            (new_name, new_note, new_status, task_id, user["id"])
+            'UPDATE tasks SET task_name = %s, note = %s, status = %s WHERE id = %s',
+            (new_name, new_note, new_status, task_id)
         )
         conn.commit()
         cursor.close()
@@ -177,7 +170,7 @@ def edit_task(task_id):
         flash("✅ Task updated successfully!")
         return redirect(url_for("mytasks"))
 
-    cursor.execute('SELECT * FROM tasks WHERE id = %s AND user_id = %s', (task_id, user["id"]))
+    cursor.execute('SELECT * FROM tasks WHERE id = %s', (task_id,))
     task = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -188,62 +181,48 @@ def edit_task(task_id):
 
     return render_template("edit_task.html", task=task, user=user)
 
-# TOGGLE STATUS
 @app.route("/toggle_status/<int:task_id>", methods=["POST"])
 def toggle_status(task_id):
-    user = session.get("user")
-    if not user:
-        return redirect(url_for("login"))
-
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT status FROM tasks WHERE id = %s AND user_id = %s', (task_id, user["id"]))
+    cursor.execute('SELECT status FROM tasks WHERE id = %s', (task_id,))
     task = cursor.fetchone()
 
     if not task:
         flash("Task not found.")
-        cursor.close()
-        conn.close()
         return redirect(url_for("mytasks"))
 
     new_status = "completed" if task["status"] == "pending" else "pending"
-    cursor.execute('UPDATE tasks SET status = %s WHERE id = %s AND user_id = %s', (new_status, task_id, user["id"]))
+    cursor.execute('UPDATE tasks SET status = %s WHERE id = %s', (new_status, task_id))
     conn.commit()
     cursor.close()
     conn.close()
     flash(f"Task marked as {new_status}!")
     return redirect(url_for("mytasks"))
 
-# DELETE
 @app.route("/delete_task/<int:task_id>", methods=["POST"])
 def delete_task(task_id):
-    user = session.get("user")
-    if not user:
-        return redirect(url_for("login"))
-
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('DELETE FROM tasks WHERE id = %s AND user_id = %s', (task_id, user["id"]))
+    cursor.execute('DELETE FROM tasks WHERE id = %s', (task_id,))
     conn.commit()
     cursor.close()
     conn.close()
     flash("Task deleted!")
     return redirect(url_for("mytasks"))
 
-# ------------------ API ENDPOINTS ------------------
+# ------------------ API ------------------
 @app.route("/api/tasks", methods=["GET"])
 def api_get_tasks():
     user = session.get("user")
     if not user:
         return {"error": "Not logged in"}, 401
-
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM tasks WHERE user_id = %s', (user["id"],))
+    cursor.execute('SELECT id, task_name, status, note FROM tasks')
     tasks = cursor.fetchall()
     cursor.close()
     conn.close()
-
     mapped_tasks = [
         {"id": t["id"], "task": t["task_name"], "status1": t["status"], "notes": t["note"]}
         for t in tasks
@@ -255,25 +234,22 @@ def api_post_tasks():
     user = session.get("user")
     if not user:
         return {"error": "Not logged in"}, 401
-
     data = request.get_json()
     tasks = data.get("tasks", [])
-
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('DELETE FROM tasks WHERE user_id = %s', (user["id"],))
-
+    cursor.execute('DELETE FROM tasks')
     for task in tasks:
         cursor.execute(
-            'INSERT INTO tasks (task_name, status, note, user_id) VALUES (%s, %s, %s, %s)',
-            (task.get("task", ""), task.get("status1", "pending"), task.get("notes", ""), user["id"])
+            'INSERT INTO tasks (task_name, status, note) VALUES (%s, %s, %s)',
+            (task.get("task", ""), task.get("status1", "pending"), task.get("notes", "")),
         )
     conn.commit()
     cursor.close()
     conn.close()
     return {"success": True}
 
-# ------------------ HELP PAGE ------------------
+# ------------------ HELP ------------------
 @app.route("/help")
 def help_page():
     return render_template("help.html")

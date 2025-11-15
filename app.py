@@ -26,7 +26,6 @@ def sub():
         return redirect(url_for("login"))
     return render_template("sub.html", user=user)
 
-# ------------------ LOGOUT ------------------
 @app.route("/logout", methods=["GET", "POST"])
 def logout():
     session.clear()
@@ -155,7 +154,7 @@ def add_task():
     flash("Task added!")
     return redirect(url_for("mytasks"))
 
-# EDIT TASK
+# EDIT
 @app.route("/edit_task/<int:task_id>", methods=["GET", "POST"])
 def edit_task(task_id):
     user = session.get("user")
@@ -217,7 +216,7 @@ def toggle_status(task_id):
     flash(f"Task marked as {new_status}!")
     return redirect(url_for("mytasks"))
 
-# DELETE TASK
+# DELETE
 @app.route("/delete_task/<int:task_id>", methods=["POST"])
 def delete_task(task_id):
     user = session.get("user")
@@ -264,6 +263,7 @@ def api_post_tasks():
     
     conn = get_db_connection()
     cursor = conn.cursor()
+    # Clear only the current user's tasks
     cursor.execute('DELETE FROM tasks WHERE user_id=%s', (user["id"],))
     
     for task in tasks:

@@ -26,6 +26,7 @@ def sub():
         return redirect(url_for("login"))
     return render_template("sub.html", user=user)
 
+# ✅ FIXED LOGOUT
 @app.route("/logout", methods=["GET", "POST"])
 def logout():
     session.clear()
@@ -76,17 +77,13 @@ def login():
 
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT id, username, email FROM users WHERE email = %s AND pass = %s', (email, password))
+        cursor.execute('SELECT * FROM users WHERE email = %s AND pass = %s', (email, password))
         user = cursor.fetchone()
         cursor.close()
         conn.close()
 
         if user:
-            session["user"] = {
-                "id": user["id"],
-                "username": user["username"],
-                "email": user["email"]
-            }
+            session["user"] = user
             flash("Login successful!")
             return redirect(url_for("home"))
         else:
@@ -100,14 +97,12 @@ def profile():
     user = session.get("user")
     if not user:
         return redirect(url_for("login"))
-
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('SELECT subscription_type FROM users WHERE email = %s', (user["email"],))
     row = cursor.fetchone()
     cursor.close()
     conn.close()
-
     subscription_type = row["subscription_type"] if row and "subscription_type" in row else "Free"
     user["subscription_type"] = subscription_type
     return render_template("profile.html", user=user)
@@ -124,32 +119,25 @@ def home():
 @app.route("/mytasks")
 def mytasks():
     user = session.get("user")
-    if not user or "id" not in user:
-        flash("User session invalid. Please login again.")
+    if not user:
         return redirect(url_for("login"))
-
+    
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT id, task_name, status, note FROM tasks WHERE "user_id"=%s', (user["id"],))
+    cursor.execute('SELECT * FROM tasks WHERE user_id = %s', (user["id"],))
     tasks = cursor.fetchall()
     cursor.close()
     conn.close()
-
-    for t in tasks:
-        if "status" not in t or not t["status"]:
-            t["status"] = "pending"
-        if "task_name" not in t or not t["task_name"]:
-            t["task_name"] = "Unnamed Task"
-        if "note" not in t:
-            t["note"] = ""
-
+    
     return render_template("task.html", user=user, tasks=tasks)
 
 # ------------------ CRUD FOR TASKS ------------------
+
+# CREATE
 @app.route("/add_task", methods=["POST"])
 def add_task():
     user = session.get("user")
-    if not user or "id" not in user:
+    if not user:
         return redirect(url_for("login"))
 
     task_name = request.form.get("task_name")
@@ -158,7 +146,7 @@ def add_task():
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(
-        'INSERT INTO tasks (task_name, status, note, "user_id") VALUES (%s, %s, %s, %s)',
+        'INSERT INTO tasks (task_name, status, note, user_id) VALUES (%s, %s, %s, %s)',
         (task_name, "pending", note, user["id"])
     )
     conn.commit()
@@ -167,10 +155,11 @@ def add_task():
     flash("Task added!")
     return redirect(url_for("mytasks"))
 
+# EDIT TASK
 @app.route("/edit_task/<int:task_id>", methods=["GET", "POST"])
 def edit_task(task_id):
     user = session.get("user")
-    if not user or "id" not in user:
+    if not user:
         return redirect(url_for("login"))
 
     conn = get_db_connection()
@@ -182,7 +171,7 @@ def edit_task(task_id):
         new_status = request.form.get("status")
 
         cursor.execute(
-            'UPDATE tasks SET task_name=%s, note=%s, status=%s WHERE id=%s AND "user_id"=%s',
+            'UPDATE tasks SET task_name=%s, note=%s, status=%s WHERE id=%s AND user_id=%s',
             (new_name, new_note, new_status, task_id, user["id"])
         )
         conn.commit()
@@ -191,7 +180,7 @@ def edit_task(task_id):
         flash("✅ Task updated successfully!")
         return redirect(url_for("mytasks"))
 
-    cursor.execute('SELECT * FROM tasks WHERE id=%s AND "user_id"=%s', (task_id, user["id"]))
+    cursor.execute('SELECT * FROM tasks WHERE id=%s AND user_id=%s', (task_id, user["id"]))
     task = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -202,15 +191,16 @@ def edit_task(task_id):
 
     return render_template("edit_task.html", task=task, user=user)
 
+# TOGGLE STATUS
 @app.route("/toggle_status/<int:task_id>", methods=["POST"])
 def toggle_status(task_id):
     user = session.get("user")
-    if not user or "id" not in user:
+    if not user:
         return redirect(url_for("login"))
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT status FROM tasks WHERE id=%s AND "user_id"=%s', (task_id, user["id"]))
+    cursor.execute('SELECT status FROM tasks WHERE id=%s AND user_id=%s', (task_id, user["id"]))
     task = cursor.fetchone()
 
     if not task:
@@ -220,22 +210,23 @@ def toggle_status(task_id):
         return redirect(url_for("mytasks"))
 
     new_status = "completed" if task["status"] == "pending" else "pending"
-    cursor.execute('UPDATE tasks SET status=%s WHERE id=%s AND "user_id"=%s', (new_status, task_id, user["id"]))
+    cursor.execute('UPDATE tasks SET status=%s WHERE id=%s AND user_id=%s', (new_status, task_id, user["id"]))
     conn.commit()
     cursor.close()
     conn.close()
     flash(f"Task marked as {new_status}!")
     return redirect(url_for("mytasks"))
 
+# DELETE TASK
 @app.route("/delete_task/<int:task_id>", methods=["POST"])
 def delete_task(task_id):
     user = session.get("user")
-    if not user or "id" not in user:
+    if not user:
         return redirect(url_for("login"))
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('DELETE FROM tasks WHERE id=%s AND "user_id"=%s', (task_id, user["id"]))
+    cursor.execute('DELETE FROM tasks WHERE id=%s AND user_id=%s', (task_id, user["id"]))
     conn.commit()
     cursor.close()
     conn.close()
@@ -246,16 +237,16 @@ def delete_task(task_id):
 @app.route("/api/tasks", methods=["GET"])
 def api_get_tasks():
     user = session.get("user")
-    if not user or "id" not in user:
+    if not user:
         return {"error": "Not logged in"}, 401
-
+    
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT id, task_name, status, note FROM tasks WHERE "user_id"=%s', (user["id"],))
+    cursor.execute('SELECT id, task_name, status, note FROM tasks WHERE user_id=%s', (user["id"],))
     tasks = cursor.fetchall()
     cursor.close()
     conn.close()
-
+    
     mapped_tasks = [
         {"id": t["id"], "task": t["task_name"], "status1": t["status"], "notes": t["note"]}
         for t in tasks
@@ -265,19 +256,20 @@ def api_get_tasks():
 @app.route("/api/tasks", methods=["POST"])
 def api_post_tasks():
     user = session.get("user")
-    if not user or "id" not in user:
+    if not user:
         return {"error": "Not logged in"}, 401
-
+    
     data = request.get_json()
     tasks = data.get("tasks", [])
-
+    
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('DELETE FROM tasks WHERE "user_id"=%s', (user["id"],))
-
+    # Clear only the current user's tasks
+    cursor.execute('DELETE FROM tasks WHERE user_id=%s', (user["id"],))
+    
     for task in tasks:
         cursor.execute(
-            'INSERT INTO tasks (task_name, status, note, "user_id") VALUES (%s, %s, %s, %s)',
+            'INSERT INTO tasks (task_name, status, note, user_id) VALUES (%s, %s, %s, %s)',
             (task.get("task", ""), task.get("status1", "pending"), task.get("notes", ""), user["id"])
         )
     conn.commit()

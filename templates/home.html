@@ -4,142 +4,122 @@
   <meta charset="UTF-8">
   <title>ToDoFlow | Home</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    /* --- MODERN 3-DOTS MENU MATCHING style.css UI --- */
+    /* --- 3-DOTS MENU OVERRIDE (matches style.css UI) --- */
+    .menu-container { position: fixed; top: 18px; right: 22px; z-index: 500; }
+    .menu-button { font-size: 26px; padding: 6px 10px; border-radius: 12px; background: var(--card-bg); box-shadow: var(--shadow); cursor: pointer; transition: 0.2s ease; user-select: none; }
+    .menu-button:hover { transform: scale(1.05); }
+    .menu-dropdown { position: absolute; right: 0; margin-top: 8px; width: 180px; background: var(--card-bg); border-radius: 14px; padding: 6px 0; box-shadow: var(--shadow-strong); display: none; animation: fadeIn 0.15s ease; }
+    .menu-item { padding: 12px 18px; font-size: 15px; cursor: pointer; color: var(--text); text-decoration: none; display: block; transition: 0.2s; }
+    .menu-item:hover { background: var(--hover); }
+    @keyframes fadeIn { from {opacity:0; transform:translateY(-6px);} to {opacity:1; transform:translateY(0);} }
 
-    .menu-container {
-        position: fixed;
-        top: 18px;
-        right: 22px;
-        z-index: 500;
-    }
+    /* --- Responsive grid for cards --- */
+    .grid { display: grid; gap: 1.5rem; margin-top: 2rem; }
+    @media (min-width: 768px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1200px) { .grid { grid-template-columns: repeat(3, 1fr); } }
 
-    .menu-button {
-        font-size: 26px;
-        padding: 6px 10px;
-        border-radius: 12px;
-        background: var(--card-bg);
-        box-shadow: var(--shadow);
-        cursor: pointer;
-        transition: 0.2s ease;
-        user-select: none;
-    }
+    /* --- Stats badges --- */
+    .badge { display: inline-block; padding: 6px 14px; border-radius: 999px; font-weight: 600; font-size: 0.85rem; margin-right: 6px; margin-bottom: 6px; color: white; background: var(--accent1); transition: 0.25s ease; }
+    .badge.completed { background: var(--completed); }
+    .badge.pending { background: var(--pending); }
 
-    .menu-button:hover {
-        background: var(--hover);
-        transform: scale(1.05);
-    }
+    /* --- Footer --- */
+    footer { text-align: center; padding: 1.5rem 1rem; color: var(--text); font-size: 0.9rem; background: var(--card-bg); margin-top: 3rem; border-top: 1px solid var(--border); border-radius: 12px; }
 
-    .menu-dropdown {
-        position: absolute;
-        right: 0;
-        margin-top: 8px;
-        width: 170px;
-        background: var(--card-bg);
-        border-radius: 14px;
-        padding: 6px 0;
-        box-shadow: var(--shadow-strong);
-        display: none;
-        animation: fadeIn 0.15s ease;
-    }
-
-    @keyframes fadeIn {
-        from {opacity: 0; transform: translateY(-6px);}
-        to {opacity: 1; transform: translateY(0);}
-    }
-
-    .menu-item {
-        padding: 12px 18px;
-        font-size: 15px;
-        cursor: pointer;
-        transition: 0.2s;
-        color: var(--text);
-        text-decoration: none;
-        display: block;
-    }
-
-    .menu-item:hover {
-        background: var(--hover);
-    }
-
-    /* DARK MODE VARIABLES (auto-match your style.css) */
-    :root {
-        --card-bg: #ffffff;
-        --text: #222;
-        --hover: #f1f1f1;
-        --shadow: 0 2px 8px rgba(0,0,0,0.15);
-        --shadow-strong: 0 4px 12px rgba(0,0,0,0.20);
-    }
-
-    [data-theme="dark"] {
-        --card-bg: #1a1a1a;
-        --text: #fff;
-        --hover: #2b2b2b;
-        --shadow: 0 2px 8px rgba(255,255,255,0.06);
-        --shadow-strong: 0 4px 12px rgba(255,255,255,0.1);
+    /* --- Mobile tweaks --- */
+    @media (max-width: 480px) {
+      header h1 { font-size: 1.4rem; }
+      .btn { padding: 10px 16px; font-size: 0.9rem; }
+      .menu-button { font-size: 24px; padding: 4px 8px; }
+      main { padding: 1rem 0.8rem; }
     }
   </style>
 </head>
-
 <body>
 
-  <!-- ====== BEAUTIFUL DROPDOWN MENU ====== -->
-  <div class="menu-container">
-      <div class="menu-button">⋮</div>
-      <div class="menu-dropdown">
-          <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
-          <div class="menu-item theme-toggle">Toggle Theme</div>
-          <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
-          <a href="{{ url_for('logout') }}" class="menu-item">Logout</a>
-      </div>
+<!-- ====== DROPDOWN MENU ====== -->
+<div class="menu-container">
+  <div class="menu-button">⋮</div>
+  <div class="menu-dropdown">
+    <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
+    <div class="menu-item theme-toggle">Toggle Theme</div>
+    <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
+    <a href="{{ url_for('logout') }}" class="menu-item">Logout</a>
+  </div>
+</div>
+
+<header>
+  <h1>ToDoFlow</h1>
+</header>
+
+<main>
+  <div class="card">
+    <h2>Welcome, {{ user.username }}!</h2>
+    <p>Organize your tasks and manage your day efficiently with ToDoFlow.</p>
+    <a href="{{ url_for('mytasks') }}" class="btn">Go to My Tasks</a>
   </div>
 
-  <header>
-    <h1>ToDoFlow</h1>
-  </header>
-
-  <main>
+  <div class="grid">
+    <!-- Quick Stats Card -->
     <div class="card">
-      <h2>Welcome, {{ user.username }}!</h2>
-      <p>Organize your tasks and manage your day with ToDoFlow.</p>
-      <a href="{{ url_for('mytasks') }}" class="btn">Go to My Tasks</a>
+      <h2>Today's Stats</h2>
+      <p>Total Tasks: <span class="badge pending">{{ user.total_pending or 0 }} Pending</span> <span class="badge completed">{{ user.total_completed or 0 }} Completed</span></p>
+      <p>Keep track of your productivity and plan ahead.</p>
     </div>
-  </main>
 
-  <!-- ====== MENU + THEME JS ====== -->
-  <script>
-    const menuBtn = document.querySelector(".menu-button");
-    const menuDropdown = document.querySelector(".menu-dropdown");
+    <!-- Tips Card -->
+    <div class="card">
+      <h2>Productivity Tips</h2>
+      <ul>
+        <li>✔ Prioritize your tasks each morning.</li>
+        <li>✔ Break large tasks into smaller steps.</li>
+        <li>✔ Use deadlines to boost focus.</li>
+        <li>✔ Review completed tasks at the end of the day.</li>
+      </ul>
+    </div>
 
-    menuBtn.addEventListener("click", () => {
-        menuDropdown.style.display =
-          menuDropdown.style.display === "block" ? "none" : "block";
-    });
+    <!-- Quick Links Card -->
+    <div class="card">
+      <h2>Quick Actions</h2>
+      <a href="{{ url_for('add_task') }}" class="btn">Add Task</a>
+      <a href="{{ url_for('mytasks') }}" class="btn">View Tasks</a>
+      <a href="{{ url_for('profile') }}" class="btn">Profile Settings</a>
+    </div>
+  </div>
+</main>
 
-    document.addEventListener("click", (e) => {
-        if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
-            menuDropdown.style.display = "none";
-        }
-    });
+<footer>
+  &copy; 2025 ToDoFlow. All rights reserved. Designed with 💙 for productivity enthusiasts.
+</footer>
 
-    // Load theme
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
+<!-- ====== MENU + THEME JS ====== -->
+<script>
+  const menuBtn = document.querySelector(".menu-button");
+  const menuDropdown = document.querySelector(".menu-dropdown");
+  menuBtn.addEventListener("click", () => {
+      menuDropdown.style.display = menuDropdown.style.display === "block" ? "none" : "block";
+  });
+  document.addEventListener("click", (e) => {
+      if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
+          menuDropdown.style.display = "none";
+      }
+  });
 
-    // Toggle theme
-    document.querySelector(".theme-toggle").addEventListener("click", () => {
-        const current = document.documentElement.getAttribute("data-theme");
-        const next = current === "dark" ? "light" : "dark";
-        document.documentElement.setAttribute("data-theme", next);
-        localStorage.setItem("theme", next);
-    });
+  // Load theme
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
 
-    // Help box
-    document.querySelector(".help-toggle").addEventListener("click", () => {
-        alert("HELP:\n\n• Add Task → My Tasks → Add Task\n• Edit Task → Click Edit\n• Delete Task → Click Delete\n• Change Theme → Menu → Toggle Theme");
-    });
-  </script>
+  // Toggle theme
+  document.querySelector(".theme-toggle").addEventListener("click", () => {
+      const current = document.documentElement.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+  });
+</script>
 
 </body>
 </html>

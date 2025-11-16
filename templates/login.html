@@ -4,14 +4,103 @@
   <meta charset="utf-8" />
   <title>Login | ToDoFlow</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    /* --- GLOBAL MENU STYLE --- */
+    .menu-container {
+      position: fixed;
+      top: 18px;
+      right: 22px;
+      z-index: 500;
+    }
+
+    .menu-button {
+      font-size: 26px;
+      padding: 6px 10px;
+      border-radius: 12px;
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: 0.2s ease;
+      user-select: none;
+    }
+
+    .menu-button:hover {
+      background: var(--accent1);
+      color: #fff;
+      transform: scale(1.05);
+    }
+
+    .menu-dropdown {
+      position: absolute;
+      right: 0;
+      margin-top: 8px;
+      width: 180px;
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 6px 0;
+      box-shadow: 0 6px 18px var(--shadow-strong);
+      display: none;
+      animation: fadeIn 0.15s ease;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .menu-item {
+      padding: 12px 18px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.2s;
+      color: var(--text);
+      text-decoration: none;
+      display: block;
+    }
+
+    .menu-item:hover {
+      background: var(--accent1);
+      color: #fff;
+    }
+
+    header {
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 0 0 25px 25px;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.25);
+    }
+
+    header h1 { font-size: 1.8rem; }
+
+    main { padding: 2rem 1rem; max-width: 500px; margin: 0 auto; animation: fadeIn 0.6s ease; }
+    .card { background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border); box-shadow: 0 8px 25px var(--shadow); }
+    .btn { background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: #fff; border: none; border-radius: 12px; padding: 12px 24px; font-size: 1rem; cursor: pointer; font-weight: 600; display: inline-block; transition: all 0.25s ease; box-shadow: 0 6px 14px rgba(0,227,255,0.4); }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,227,255,0.5); }
+
+    input { width: 100%; padding: 10px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); }
+
+    .back-btn { display: inline-block; margin-top: 12px; text-decoration: none; color: var(--accent2); font-weight: 600; }
+  </style>
 </head>
 
 <body>
+
+  <!-- 3 DOTS MENU -->
+  <div class="menu-container">
+      <div class="menu-button">⋮</div>
+      <div class="menu-dropdown">
+          <a href="{{ url_for('register') }}" class="menu-item">Register</a>
+          <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
+          <div class="menu-item theme-toggle">Toggle Theme</div>
+      </div>
+  </div>
+
   <header>
     <h1>ToDoFlow</h1>
-    <nav>
-      <a href="{{ url_for('register') }}">📝 Register</a>
-    </nav>
   </header>
 
   <main>
@@ -30,26 +119,30 @@
     </div>
   </main>
 
-  <!-- Theme Toggle -->
-  <button id="theme-toggle">🌗</button>
-
+  <!-- THEME + MENU SCRIPT -->
   <script>
-    const toggle = document.getElementById("theme-toggle");
-    const root = document.documentElement;
+    const menuBtn = document.querySelector(".menu-button");
+    const menuDropdown = document.querySelector(".menu-dropdown");
 
-    // Load saved theme
+    menuBtn.addEventListener("click", () => {
+        menuDropdown.style.display =
+          menuDropdown.style.display === "block" ? "none" : "block";
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
+            menuDropdown.style.display = "none";
+        }
+    });
+
     const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      root.setAttribute("data-theme", savedTheme);
-    }
+    if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
 
-    // Toggle theme
-    toggle.addEventListener("click", () => {
-      const current = root.getAttribute("data-theme");
-      const next = current === "dark" ? "light" : "dark";
-
-      root.setAttribute("data-theme", next);
-      localStorage.setItem("theme", next);
+    document.querySelector(".theme-toggle").addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme");
+        const next = current === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
     });
   </script>
 

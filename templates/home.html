@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>ToDoFlow | Home</title>
+  <title>ToDoList| Home</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
   <style>
     :root{--accent1:#00c6ff;--accent2:#0072ff;--pending:#ff9800;--completed:#4caf50;--card-bg:#fefefe;--text:#222;--border:#e0e0e0;--shadow:rgba(0,0,0,0.15);--shadow-strong:rgba(0,0,0,0.25)}
     [data-theme="dark"]{--card-bg:#1a1a1a;--text:#eee;--border:#2b2b2b;--shadow:rgba(255,255,255,0.06);--shadow-strong:rgba(255,255,255,0.1)}
@@ -31,13 +32,13 @@
   </div>
 
   <header>
-    <h1>ToDoFlow</h1>
+    <h1>ToDoList</h1>
   </header>
 
   <main>
     <div class="card home-welcome">
       <h2>Welcome, {{ user.username }}!</h2>
-      <p>Organize your tasks and manage your day with ToDoFlow.</p>
+      <p>Organize your tasks and manage your day with ToDoList.</p>
       <a href="{{ url_for('mytasks') }}" class="btn">Go to My Tasks</a>
     </div>
 

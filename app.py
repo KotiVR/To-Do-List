@@ -111,14 +111,6 @@ def home():
     user = session.get("user")
     if not user:
         return redirect(url_for("login"))
-    return render_template("home.html", user=user)
-
-# ------------------ TASKS PAGE ------------------
-@app.route("/")
-def home():
-    user = session.get("user")
-    if not user:
-        return redirect(url_for("login"))
 
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -146,6 +138,20 @@ def home():
         pending_tasks_percent=pending_percent,
         completed_tasks_percent=completed_percent
     )
+
+# ------------------ TASKS PAGE ------------------
+@app.route("/mytasks")
+def mytasks():
+    user = session.get("user")
+    if not user:
+        return redirect(url_for("login"))
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM tasks WHERE user_id = %s', (user["id"],))  # only user's tasks
+    tasks = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template("task.html", user=user, tasks=tasks)
 
 # ------------------ CRUD FOR TASKS ------------------
 @app.route("/add_task", methods=["POST"])

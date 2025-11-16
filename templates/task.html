@@ -3,29 +3,146 @@
 <head>
   <meta charset="UTF-8">
   <title>My Tasks | ToDoFlow</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    /* ---------- VARIABLES ---------- */
+    :root {
+      --accent1: #00c6ff;
+      --accent2: #0072ff;
+      --pending: #ff9800;
+      --completed: #4caf50;
+      --card-bg: #fefefe;
+      --text: #222;
+      --border: #e0e0e0;
+      --shadow: rgba(0,0,0,0.15);
+      --shadow-strong: rgba(0,0,0,0.25);
+      --hover: #00c6ff;
+    }
+    [data-theme="dark"] {
+      --card-bg: #1a1a1a;
+      --text: #eee;
+      --border: #2b2b2b;
+      --shadow: rgba(255,255,255,0.06);
+      --shadow-strong: rgba(255,255,255,0.1);
+      --hover: #0072ff;
+    }
+
+    /* ---------- GLOBAL ---------- */
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--card-bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+    }
+    a {
+      text-decoration: none;
+      color: var(--accent2);
+      font-weight: 600;
+    }
+    a:hover {text-decoration: underline;}
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 16px;
+      background: linear-gradient(135deg,var(--accent1),var(--accent2));
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 6px 14px rgba(0,227,255,0.4);
+      transition: all 0.25s ease;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(0,227,255,0.5);
+    }
+
+    /* ---------- HEADER ---------- */
+    header {
+      background: linear-gradient(90deg,var(--accent1),var(--accent2));
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.25);
+      border-radius: 0 0 25px 25px;
+    }
+    header h1 {font-size: 1.8rem; font-weight:700; margin:0;}
+    nav a, .nav-logout {margin-left: 15px; font-size:1rem;}
+
+    /* ---------- MAIN CARDS ---------- */
+    main {max-width: 800px; margin:2rem auto; padding:1rem; animation: fadeIn 0.6s ease;}
+    .card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 2rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 25px var(--shadow);
+      margin-bottom: 2rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    }
+    input[type="text"], textarea, select {
+      width: 100%;
+      padding: 10px 12px;
+      margin: 8px 0 16px 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 1rem;
+      background: var(--card-bg);
+      color: var(--text);
+    }
+
+    /* ---------- TASK ROWS ---------- */
+    .task-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      transition: all 0.2s ease;
+    }
+    .task-row.completed-task {
+      background: rgba(76, 175, 80, 0.1);
+    }
+    .task-actions button, .task-actions a {
+      margin-left: 10px;
+    }
+
+    /* ---------- BACK BUTTON ---------- */
+    .back-btn {display:inline-block; margin-top:1rem; font-weight:600; color:var(--accent2);}
+
+    /* ---------- ANIMATIONS ---------- */
+    @keyframes fadeIn {from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);}}
+  </style>
 </head>
 
 <body>
+
+  <!-- ====== HEADER ====== -->
   <header>
     <h1>My Tasks</h1>
     <nav>
-      <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
+      <a href="{{ url_for('help_page') }}">Help</a>
       <a href="{{ url_for('profile') }}">Profile</a>
       <a href="{{ url_for('home') }}">Home</a>
-
       <form action="{{ url_for('logout') }}" method="post" style="display:inline;">
         <button type="submit" class="nav-logout">Logout</button>
       </form>
     </nav>
   </header>
 
+  <!-- ====== MAIN CONTENT ====== -->
   <main>
 
     <!-- Add Task -->
     <div class="card">
       <h2>Add a New Task</h2>
-
       <form action="{{ url_for('add_task') }}" method="post">
         <input type="text" name="task_name" placeholder="Enter task name..." required>
         <textarea name="note" placeholder="Add notes (optional)"></textarea>
@@ -40,32 +157,20 @@
       {% if tasks %}
         {% for task in tasks %}
         <div class="task-row {% if task.status == 'completed' %}completed-task{% endif %}">
-          
-          <!-- Task Text -->
           <div>
             <strong>{{ task.task_name }}</strong><br>
             <small>{{ task.note }}</small><br>
-
-            <small>
-              Status:
-              <span style="
-                color: {% if task.status == 'completed' %}#00b894{% else %}#e67e22{% endif %};
-                font-weight: bold;">
+            <small>Status:
+              <span style="color:{% if task.status=='completed' %}#4caf50{% else %}#ff9800{% endif %}; font-weight:bold;">
                 {{ task.status|capitalize }}
               </span>
             </small>
           </div>
 
-          <!-- Buttons -->
           <div class="task-actions">
-
             <form action="{{ url_for('toggle_status', task_id=task.id) }}" method="post" style="display:inline;">
               <button type="submit" class="status-btn">
-                {% if task.status == 'completed' %}
-                  Mark Pending
-                {% else %}
-                  Mark Complete
-                {% endif %}
+                {% if task.status == 'completed' %}Mark Pending{% else %}Mark Complete{% endif %}
               </button>
             </form>
 
@@ -74,9 +179,7 @@
             <form action="{{ url_for('delete_task', task_id=task.id) }}" method="post" style="display:inline;">
               <button type="submit" class="delete-btn">Delete</button>
             </form>
-
           </div>
-
         </div>
         {% endfor %}
       {% else %}
@@ -88,8 +191,8 @@
 
   </main>
 
-  <!-- Theme Toggle -->
-  <button id="theme-toggle">🌗</button>
+  <!-- THEME TOGGLE -->
+  <button id="theme-toggle">🌗 Toggle Theme</button>
 
   <script>
     const toggle = document.getElementById("theme-toggle");
@@ -101,7 +204,6 @@
     toggle.addEventListener("click", () => {
       const current = root.getAttribute("data-theme");
       const next = current === "dark" ? "light" : "dark";
-
       root.setAttribute("data-theme", next);
       localStorage.setItem("theme", next);
     });

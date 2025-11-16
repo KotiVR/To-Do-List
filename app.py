@@ -116,12 +116,12 @@ def home():
     cursor = conn.cursor()
     
     # Count pending tasks
-    cursor.execute('SELECT COUNT(*) FROM tasks WHERE "user_id"=%s AND status=%s', (user["id"], "pending"))
-    pending_tasks = cursor.fetchone()[0]
+    cursor.execute('SELECT COUNT(*) AS count FROM tasks WHERE "user_id"=%s AND status=%s', (user["id"], "pending"))
+    pending_tasks = cursor.fetchone()['count']
 
     # Count completed tasks
-    cursor.execute('SELECT COUNT(*) FROM tasks WHERE "user_id"=%s AND status=%s', (user["id"], "completed"))
-    completed_tasks = cursor.fetchone()[0]
+    cursor.execute('SELECT COUNT(*) AS count FROM tasks WHERE "user_id"=%s AND status=%s', (user["id"], "completed"))
+    completed_tasks = cursor.fetchone()['count']
 
     total_tasks = pending_tasks + completed_tasks
     pending_percent = int((pending_tasks / total_tasks) * 100) if total_tasks else 0
@@ -147,7 +147,7 @@ def mytasks():
         return redirect(url_for("login"))
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM tasks WHERE user_id = %s', (user["id"],))  # only user's tasks
+    cursor.execute('SELECT * FROM tasks WHERE "user_id" = %s', (user["id"],))
     tasks = cursor.fetchall()
     cursor.close()
     conn.close()

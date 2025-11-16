@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
-# ------------------ DATABASE CONNECTION (Neon PostgreSQL) ------------------
+# ------------------ DATABASE CONNECTION ------------------
 def get_db_connection():
     return psycopg2.connect(
         host="ep-falling-grass-a40q9cy3-pooler.us-east-1.aws.neon.tech",
@@ -119,8 +119,10 @@ def mytasks():
     user = session.get("user")
     if not user:
         return redirect(url_for("login"))
+
     conn = get_db_connection()
     cursor = conn.cursor()
+    # Only select tasks for the current logged-in user
     cursor.execute('SELECT * FROM tasks WHERE "user_id"=%s', (user["id"],))
     tasks = cursor.fetchall()
     cursor.close()
@@ -128,7 +130,6 @@ def mytasks():
     return render_template("task.html", user=user, tasks=tasks)
 
 # ------------------ CRUD FOR TASKS ------------------
-# CREATE
 @app.route("/add_task", methods=["POST"])
 def add_task():
     user = session.get("user")
@@ -150,7 +151,6 @@ def add_task():
     flash("Task added!")
     return redirect(url_for("mytasks"))
 
-# EDIT
 @app.route("/edit_task/<int:task_id>", methods=["GET", "POST"])
 def edit_task(task_id):
     user = session.get("user")
@@ -183,7 +183,6 @@ def edit_task(task_id):
         return redirect(url_for("mytasks"))
     return render_template("edit_task.html", task=task, user=user)
 
-# TOGGLE STATUS
 @app.route("/toggle_status/<int:task_id>", methods=["POST"])
 def toggle_status(task_id):
     user = session.get("user")
@@ -208,7 +207,6 @@ def toggle_status(task_id):
     flash(f"Task marked as {new_status}!")
     return redirect(url_for("mytasks"))
 
-# DELETE
 @app.route("/delete_task/<int:task_id>", methods=["POST"])
 def delete_task(task_id):
     user = session.get("user")

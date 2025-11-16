@@ -12,7 +12,7 @@ def get_db_connection():
         port=5432,
         user="neondb_owner",
         password="npg_VSt5nCNLq1Ak",
-        dbname="todoflow",
+        dbname="neondb",
         sslmode="require",
         cursor_factory=psycopg2.extras.RealDictCursor
     )

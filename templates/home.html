@@ -67,33 +67,31 @@
   </header>
 
   <!-- ====== MAIN CONTENT ====== -->
-  <main>
-    <div class="card">
-      <h2>Welcome, {{ user.username }}!</h2>
-      <p>Organize your tasks and manage your day with ToDoFlow.</p>
-      <a href="{{ url_for('mytasks') }}" class="btn">Go to My Tasks</a>
-    </div>
+<main>
+  <div class="card home-welcome">
+    <h2>Welcome, {{ user.username }}!</h2>
+    <p>Organize your tasks and manage your day with ToDoFlow.</p>
+    <a href="{{ url_for('mytasks') }}" class="btn">Go to My Tasks</a>
+  </div>
 
-    <div class="card">
-      <h2>Task Summary</h2>
-      <div class="stats-container">
-        <div class="stat-item">
-          <span class="badge pending">Total Tasks</span>
-          <span class="stat-count">{{ total_tasks }}</span>
-          <div class="progress-container">
-            <div class="progress-bar" style="width:{{ total_tasks_percent }}%"></div>
-          </div>
-        </div>
-        <div class="stat-item">
-          <span class="badge completed">Completed Tasks</span>
-          <span class="stat-count">{{ completed_tasks }}</span>
-          <div class="progress-container">
-            <div class="progress-bar" style="width:{{ completed_tasks_percent }}%"></div>
-          </div>
-        </div>
+  <div class="task-summary">
+    <div class="task-card pending">
+      <h3>Pending Tasks</h3>
+      <p class="task-count">{{ pending_tasks }}</p>
+      <div class="progress-bar">
+        <div class="progress" style="width: {{ pending_tasks_percent }}%;"></div>
       </div>
     </div>
-  </main>
+
+    <div class="task-card completed">
+      <h3>Completed Tasks</h3>
+      <p class="task-count">{{ completed_tasks }}</p>
+      <div class="progress-bar">
+        <div class="progress completed-progress" style="width: {{ completed_tasks_percent }}%;"></div>
+      </div>
+    </div>
+  </div>
+</main>
 
   <script>
     const menuBtn=document.querySelector(".menu-button");

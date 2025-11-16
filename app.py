@@ -114,20 +114,38 @@ def home():
     return render_template("home.html", user=user)
 
 # ------------------ TASKS PAGE ------------------
-@app.route("/mytasks")
-def mytasks():
+@app.route("/")
+def home():
     user = session.get("user")
     if not user:
         return redirect(url_for("login"))
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    # Only select tasks for the current logged-in user
-    cursor.execute('SELECT * FROM tasks WHERE "user_id"=%s', (user["id"],))
-    tasks = cursor.fetchall()
+    
+    # Count pending tasks
+    cursor.execute('SELECT COUNT(*) FROM tasks WHERE "user_id"=%s AND status=%s', (user["id"], "pending"))
+    pending_tasks = cursor.fetchone()[0]
+
+    # Count completed tasks
+    cursor.execute('SELECT COUNT(*) FROM tasks WHERE "user_id"=%s AND status=%s', (user["id"], "completed"))
+    completed_tasks = cursor.fetchone()[0]
+
+    total_tasks = pending_tasks + completed_tasks
+    pending_percent = int((pending_tasks / total_tasks) * 100) if total_tasks else 0
+    completed_percent = int((completed_tasks / total_tasks) * 100) if total_tasks else 0
+
     cursor.close()
     conn.close()
-    return render_template("task.html", user=user, tasks=tasks)
+
+    return render_template(
+        "home.html",
+        user=user,
+        pending_tasks=pending_tasks,
+        completed_tasks=completed_tasks,
+        pending_tasks_percent=pending_percent,
+        completed_tasks_percent=completed_percent
+    )
 
 # ------------------ CRUD FOR TASKS ------------------
 @app.route("/add_task", methods=["POST"])

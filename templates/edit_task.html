@@ -7,23 +7,32 @@
   <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
 
   <style>
-.top-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-}
+    /* -------- TOP HEADER -------- */
+    .top-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 25px;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      box-shadow: 0 4px 25px var(--shadow-strong);
+      border-radius: 0 0 25px 25px;
+    }
 
-.logo {
-    width: 70px;
-    height: 70px;
-}
+    .logo {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      cursor: pointer;
+    }
 
-.site-title {
-    font-size: 26px;
-    margin: 0;
-}
+    .site-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+      margin: 0;
+    }
 
+    /* -------- THEME COLORS -------- */
     :root {
       --accent1: #00c6ff;
       --accent2: #0072ff;
@@ -46,52 +55,47 @@
       --hover: #333;
     }
 
-    .menu-container {position:fixed;top:18px;right:22px;z-index:500}
-    .menu-button {font-size:26px;padding:6px 10px;border-radius:12px;background:var(--card-bg);box-shadow:0 2px 8px var(--shadow);cursor:pointer;transition:0.2s ease;user-select:none}
-    .menu-button:hover {background:var(--hover);transform:scale(1.05)}
-    .menu-dropdown {position:absolute;right:0;margin-top:8px;width:170px;background:var(--card-bg);border-radius:14px;padding:6px 0;box-shadow:0 6px 18px var(--shadow-strong);display:none;animation:fadeIn 0.15s ease}
-    .menu-item {padding:12px 18px;font-size:15px;cursor:pointer;transition:0.2s;color:var(--text);text-decoration:none;display:block}
-    .menu-item:hover {background:var(--hover)}
+    /* -------- MENU -------- */
+    .menu-container {position:fixed;top:18px;right:22px;z-index:500;}
+    .menu-button {font-size:26px;padding:6px 10px;border-radius:12px;background:var(--card-bg);
+      box-shadow:0 2px 8px var(--shadow);cursor:pointer;transition:0.2s ease;user-select:none;}
+    .menu-button:hover {background:var(--hover);transform:scale(1.05);}
+    .menu-dropdown {position:absolute;right:0;margin-top:8px;width:170px;background:var(--card-bg);
+      border-radius:14px;padding:6px 0;box-shadow:0 6px 18px var(--shadow-strong);
+      display:none;animation:fadeIn 0.15s ease;}
+    .menu-item {padding:12px 18px;font-size:15px;cursor:pointer;color:var(--text);
+      text-decoration:none;display:block;transition:0.2s;}
+    .menu-item:hover {background:var(--hover);}
 
-    @keyframes fadeIn {from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)}}
-
-    header {
-      background: linear-gradient(90deg, var(--accent1), var(--accent2));
-      color: #fff;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 25px var(--shadow-strong);
-      border-radius: 0 0 25px 25px;
+    @keyframes fadeIn {
+      from {opacity:0;transform:translateY(-6px);}
+      to {opacity:1;transform:translateY(0);}
     }
 
-    header h1 {font-size:1.8rem;font-weight:700}
-
-    main {padding:2rem 1rem;max-width:900px;margin:0 auto;animation:fadeIn 0.6s ease}
-    .card {background:var(--card-bg);border-radius:20px;padding:2rem;border:1px solid var(--border);box-shadow:0 8px 25px var(--shadow);margin-bottom:2rem;transition:transform 0.2s ease,box-shadow 0.2s ease;text-align:center}
-    .card:hover {transform:translateY(-4px);box-shadow:0 12px 40px var(--shadow-strong)}
-
-    .btn {
-      background:linear-gradient(135deg,var(--accent1),var(--accent2));
-      color:#fff;
-      border:none;
-      border-radius:12px;
-      padding:12px 24px;
-      font-size:1rem;
-      cursor:pointer;
-      font-weight:600;
-      display:inline-block;
-      transition:all 0.25s ease;
-      box-shadow:0 6px 14px rgba(0,227,255,0.4);
-      text-decoration:none;
+    /* -------- MAIN CARD -------- */
+    main {
+      padding:2rem 1rem;
+      max-width:900px;
+      margin:0 auto;
+      animation:fadeIn 0.6s ease;
     }
 
-    .btn:hover {
-      transform:translateY(-3px);
-      box-shadow:0 10px 30px rgba(0,227,255,0.5);
+    .card {
+      background:var(--card-bg);
+      border-radius:20px;
+      padding:2rem;
+      border:1px solid var(--border);
+      box-shadow:0 8px 25px var(--shadow);
+      transition:0.2s ease;
+      text-align:center;
     }
 
+    .card:hover {
+      transform:translateY(-4px);
+      box-shadow:0 12px 40px var(--shadow-strong);
+    }
+
+    /* -------- FORM ELEMENTS -------- */
     input, textarea, select.dropdown {
       width:100%;
       padding:12px 14px;
@@ -106,8 +110,29 @@
     }
 
     input:focus, textarea:focus, select.dropdown:focus {
-      border-color:var(--accent1);
+      border-color: var(--accent1);
       box-shadow:0 0 12px var(--accent1);
+    }
+
+    /* -------- BUTTONS -------- */
+    .btn {
+      background:linear-gradient(135deg,var(--accent1),var(--accent2));
+      color:#fff;
+      border:none;
+      border-radius:12px;
+      padding:12px 24px;
+      font-size:1rem;
+      cursor:pointer;
+      font-weight:600;
+      display:inline-block;
+      transition:0.25s ease;
+      box-shadow:0 6px 14px rgba(0,227,255,0.4);
+      text-decoration:none;
+    }
+
+    .btn:hover {
+      transform:translateY(-3px);
+      box-shadow:0 10px 30px rgba(0,227,255,0.5);
     }
 
     .back-btn {
@@ -117,9 +142,9 @@
       padding:10px 18px;
       font-weight:600;
       text-decoration:none;
-      box-shadow:0 5px 18px rgba(0,224,255,0.35);
       display:inline-block;
-      margin-top:12px;
+      margin-top:20px;
+      box-shadow:0 5px 18px rgba(0,224,255,0.35);
     }
 
     .back-btn:hover {
@@ -127,13 +152,17 @@
       box-shadow:0 10px 25px rgba(0,224,255,0.45);
     }
 
-    @media(max-width:768px){.card{padding:1.5rem}.btn,.back-btn{width:100%}}
-    @media(max-width:480px){header h1{font-size:1.5rem}}
+    @media(max-width:768px){
+      .card {padding:1.5rem;}
+      .btn, .back-btn {width:100%;}
+    }
+
   </style>
 </head>
 
 <body>
 
+  <!-- Menu -->
   <div class="menu-container">
     <div class="menu-button">⋮</div>
     <div class="menu-dropdown">
@@ -146,16 +175,18 @@
     </div>
   </div>
 
-<header class="top-header">
+  <!-- Header with large logo -->
+  <header class="top-header">
     <a href="{{ url_for('home') }}">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+      <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Logo">
     </a>
     <h1 class="site-title">Edit Task</h1>
-</header>
+  </header>
 
   <main>
     <div class="card">
       <h2>Update Task</h2>
+
       <form method="POST">
         <label><strong>Task Name</strong></label>
         <input type="text" name="task_name" value="{{ task.task_name }}" required>
@@ -163,8 +194,8 @@
         <label><strong>Notes</strong></label>
         <textarea name="note" placeholder="Enter notes (optional)">{{ task.note }}</textarea>
 
-        <label for="status"><strong>Status</strong></label>
-        <select name="status" id="status" class="dropdown">
+        <label><strong>Status</strong></label>
+        <select name="status" class="dropdown">
           <option value="pending" {% if task.status == 'pending' %}selected{% endif %}>Pending</option>
           <option value="completed" {% if task.status == 'completed' %}selected{% endif %}>Completed</option>
         </select>

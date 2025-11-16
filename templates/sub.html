@@ -5,23 +5,32 @@
   <title>Subscription | ToDoList</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
+
   <style>
-.top-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-}
 
-.logo {
-    width: 40px;       /* change size if needed */
-    height: 40px;
-}
+  .top-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      padding-left: 80px;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      color: #fff;
+      border-radius: 0 0 25px 25px;
+      box-shadow: 0 4px 25px var(--shadow-strong);
+  }
 
-.site-title {
-    font-size: 26px;
-    margin: 0;
-}
+  .logo {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+  }
+
+  .site-title {
+      font-size: 26px;
+      margin: 0;
+      font-weight: 700;
+  }
 
     :root {
       --accent1: #00c6ff;
@@ -35,6 +44,7 @@
       --shadow-strong: rgba(0,0,0,0.25);
       --hover: #e0f0ff;
     }
+
     [data-theme="dark"] {
       --card-bg: #1a1a1a;
       --text: #eee;
@@ -44,7 +54,7 @@
       --hover: #333;
     }
 
-    /* --- Global Menu --- */
+    /* Menu */
     .menu-container{position:fixed;top:18px;right:22px;z-index:500}
     .menu-button{font-size:26px;padding:6px 10px;border-radius:12px;background:var(--card-bg);box-shadow:0 2px 8px var(--shadow);cursor:pointer;transition:0.2s ease;user-select:none}
     .menu-button:hover{background:var(--hover);transform:scale(1.05)}
@@ -54,21 +64,32 @@
 
     @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 
-    /* --- Header --- */
-    header{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 25px var(--shadow-strong);border-radius:0 0 25px 25px}
-    header h1{font-size:1.8rem;font-weight:700}
-
-    /* --- Main & Card --- */
+    /* Main */
     main{padding:2rem 1rem;max-width:900px;margin:0 auto;animation:fadeIn 0.6s ease}
-    .card{background:var(--card-bg);border-radius:20px;padding:2rem;border:1px solid var(--border);box-shadow:0 8px 25px var(--shadow);margin-bottom:2rem;transition:transform 0.2s ease,box-shadow 0.2s ease}
+
+    .card{
+      background:var(--card-bg);
+      border-radius:20px;
+      padding:2rem;
+      border:1px solid var(--border);
+      box-shadow:0 8px 25px var(--shadow);
+      margin-bottom:2rem;
+      transition:transform 0.2s ease,box-shadow 0.2s ease
+    }
     .card:hover{transform:translateY(-4px);box-shadow:0 12px 40px var(--shadow-strong)}
 
-    /* --- Back Button --- */
-    .back-btn{background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;border-radius:12px;padding:10px 18px;font-weight:600;text-decoration:none;box-shadow:0 5px 18px rgba(0,224,255,0.35);display:inline-block;margin-top:12px}
+    .back-btn{
+      background:linear-gradient(135deg,var(--accent1),var(--accent2));
+      color:#fff;border-radius:12px;
+      padding:10px 18px;font-weight:600;
+      text-decoration:none;
+      box-shadow:0 5px 18px rgba(0,224,255,0.35);
+      display:inline-block;margin-top:12px
+    }
     .back-btn:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 10px 25px rgba(0,224,255,0.45)}
 
     @media(max-width:768px){.card{padding:1.5rem}.back-btn{width:100%}}
-    @media(max-width:480px){header h1{font-size:1.5rem}}
+    @media(max-width:480px){.site-title{font-size:1.5rem}}
   </style>
 </head>
 
@@ -86,17 +107,18 @@
     </div>
   </div>
 
-<header class="top-header">
-    <a href="https://to-do-list-1-2t27.onrender.com">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
-    </a>
-    <h1 class="site-title">Subscriptions</h1>
-</header>
+  <!-- Header with Logo -->
+  <header class="top-header">
+      <a href="https://to-do-list-1-2t27.onrender.com">
+          <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+      </a>
+      <h1 class="site-title">Subscriptions</h1>
+  </header>
 
   <main>
     <div class="card">
       <h2>Choose Your Plan</h2>
-      <h3> This is a Beta version(under progress)</h3> 
+      <h3>This is a Beta version (under progress)</h3>
       <ul>
         <li><strong>Free:</strong> Basic features, limited tasks</li>
         <li><strong>Pro:</strong> Unlimited tasks, reminders</li>
@@ -106,18 +128,34 @@
     <a href="{{ url_for('home') }}" class="back-btn">← Back to Home</a>
   </main>
 
-  <!-- Theme Toggle -->
-  <button id="theme-toggle">🌗</button>
-
+  <!-- Theme Script -->
   <script>
     const menuBtn=document.querySelector(".menu-button");
     const menuDropdown=document.querySelector(".menu-dropdown");
-    menuBtn.addEventListener("click",()=>{menuDropdown.style.display=menuDropdown.style.display==="block"?"none":"block"});
-    document.addEventListener("click",(e)=>{if(!menuBtn.contains(e.target)&&!menuDropdown.contains(e.target)){menuDropdown.style.display="none"}});
+
+    menuBtn.addEventListener("click",()=>{
+      menuDropdown.style.display=menuDropdown.style.display==="block"?"none":"block";
+    });
+
+    document.addEventListener("click",(e)=>{
+      if(!menuBtn.contains(e.target)&&!menuDropdown.contains(e.target)){
+        menuDropdown.style.display="none";
+      }
+    });
+
     const toggle=document.querySelector(".theme-toggle");
     const savedTheme=localStorage.getItem("theme");
-    if(savedTheme)document.documentElement.setAttribute("data-theme",savedTheme);
-    toggle.addEventListener("click",()=>{const current=document.documentElement.getAttribute("data-theme");const next=current==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",next);localStorage.setItem("theme",next)});
+
+    if(savedTheme){
+      document.documentElement.setAttribute("data-theme",savedTheme);
+    }
+
+    toggle.addEventListener("click",()=>{
+      const current=document.documentElement.getAttribute("data-theme");
+      const next=current==="dark"?"light":"dark";
+      document.documentElement.setAttribute("data-theme",next);
+      localStorage.setItem("theme",next);
+    });
   </script>
 
 </body>

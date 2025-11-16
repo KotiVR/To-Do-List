@@ -5,23 +5,13 @@
   <title>My Tasks | ToDoList</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
+
   <style>
-.top-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-}
-
-.logo {
-    width: 40px;       /* change size if needed */
-    height: 40px;
-}
-
-.site-title {
-    font-size: 26px;
-    margin: 0;
-}
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px; /* optional */
+    }
 
     :root {
       --accent1: #00c6ff;
@@ -35,6 +25,7 @@
       --shadow-strong: rgba(0,0,0,0.25);
       --hover: #e0f0ff;
     }
+
     [data-theme="dark"] {
       --card-bg: #1a1a1a;
       --text: #eee;
@@ -55,8 +46,21 @@
     @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 
     /* --- Header --- */
-    header{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 25px var(--shadow-strong);border-radius:0 0 25px 25px}
-    header h1{font-size:1.8rem;font-weight:700}
+    header{
+      background:linear-gradient(90deg,var(--accent1),var(--accent2));
+      color:#fff;
+      padding:1rem 2rem;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      box-shadow:0 4px 25px var(--shadow-strong);
+      border-radius:0 0 25px 25px;
+    }
+    header h1{
+      font-size:1.8rem;
+      font-weight:700;
+      margin:0;
+    }
 
     /* --- Main & Cards --- */
     main{padding:2rem 1rem;max-width:900px;margin:0 auto;animation:fadeIn 0.6s ease}
@@ -86,7 +90,17 @@
     .btn:hover, .status-btn:hover, .edit-btn:hover, .delete-btn:hover {transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,227,255,0.5)}
 
     /* --- Back Button --- */
-    .back-btn{background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;border-radius:12px;padding:10px 18px;font-weight:600;text-decoration:none;box-shadow:0 5px 18px rgba(0,224,255,0.35);display:inline-block;margin-top:12px}
+    .back-btn{
+      background:linear-gradient(135deg,var(--accent1),var(--accent2));
+      color:#fff;
+      border-radius:12px;
+      padding:10px 18px;
+      font-weight:600;
+      text-decoration:none;
+      box-shadow:0 5px 18px rgba(0,224,255,0.35);
+      display:inline-block;
+      margin-top:12px;
+    }
     .back-btn:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 10px 25px rgba(0,224,255,0.45)}
 
     /* --- Task Rows --- */
@@ -113,14 +127,18 @@
     </div>
   </div>
 
-<header class="top-header">
-    <a href="https://to-do-list-1-2t27.onrender.com">
+  <!-- FIXED HEADER WITH LOGO -->
+  <header>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <a href="https://to-do-list-1-2t27.onrender.com">
         <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
-    </a>
-    <h1 class="site-title">Your Tasks</h1>
-</header>
+      </a>
+      <h1>Your Tasks</h1>
+    </div>
+  </header>
 
   <main>
+
     <!-- Add Task -->
     <div class="card">
       <h2>Add a New Task</h2>
@@ -146,13 +164,16 @@
               </span>
             </small>
           </div>
+
           <div class="task-actions">
             <form action="{{ url_for('toggle_status', task_id=task.id) }}" method="post" style="display:inline;">
               <button type="submit" class="status-btn">
                 {% if task.status == 'completed' %}Mark Pending{% else %}Mark Complete{% endif %}
               </button>
             </form>
+
             <a href="{{ url_for('edit_task', task_id=task.id) }}" class="edit-btn">Edit</a>
+
             <form action="{{ url_for('delete_task', task_id=task.id) }}" method="post" style="display:inline;">
               <button type="submit" class="delete-btn">Delete</button>
             </form>
@@ -173,12 +194,29 @@
   <script>
     const menuBtn = document.querySelector(".menu-button");
     const menuDropdown = document.querySelector(".menu-dropdown");
-    menuBtn.addEventListener("click",()=>{menuDropdown.style.display=menuDropdown.style.display==="block"?"none":"block"});
-    document.addEventListener("click",(e)=>{if(!menuBtn.contains(e.target)&&!menuDropdown.contains(e.target)){menuDropdown.style.display="none"}});
+
+    menuBtn.addEventListener("click",()=>{
+      menuDropdown.style.display = menuDropdown.style.display==="block" ? "none" : "block";
+    });
+
+    document.addEventListener("click",(e)=>{
+      if(!menuBtn.contains(e.target)&&!menuDropdown.contains(e.target)){
+        menuDropdown.style.display="none";
+      }
+    });
+
     const toggle = document.getElementById("theme-toggle");
     const root = document.documentElement;
-    const saved=localStorage.getItem("theme");if(saved)root.setAttribute("data-theme",saved);
-    toggle.addEventListener("click",()=>{const current=root.getAttribute("data-theme");const next=current==="dark"?"light":"dark";root.setAttribute("data-theme",next);localStorage.setItem("theme",next)});
+    const saved = localStorage.getItem("theme");
+
+    if(saved) root.setAttribute("data-theme",saved);
+
+    toggle.addEventListener("click",()=>{
+      const current = root.getAttribute("data-theme");
+      const next = current==="dark" ? "light" : "dark";
+      root.setAttribute("data-theme",next);
+      localStorage.setItem("theme",next);
+    });
   </script>
 </body>
 </html>

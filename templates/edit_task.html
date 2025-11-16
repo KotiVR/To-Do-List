@@ -6,77 +6,76 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
   <style>
-    /* --- SAME GLOBAL MENU STYLE --- */
-    .menu-container {
-        position: fixed;
-        top: 18px;
-        right: 22px;
-        z-index: 500;
+    :root {
+      --accent1: #00c6ff;
+      --accent2: #0072ff;
+      --pending: #ff9800;
+      --completed: #4caf50;
+      --card-bg: #fefefe;
+      --text: #222;
+      --border: #e0e0e0;
+      --shadow: rgba(0,0,0,0.15);
+      --shadow-strong: rgba(0,0,0,0.25);
+      --hover: #e0f0ff;
+    }
+    [data-theme="dark"] {
+      --card-bg: #1a1a1a;
+      --text: #eee;
+      --border: #2b2b2b;
+      --shadow: rgba(255,255,255,0.06);
+      --shadow-strong: rgba(255,255,255,0.1);
+      --hover: #333;
     }
 
-    .menu-button {
-        font-size: 26px;
-        padding: 6px 10px;
-        border-radius: 12px;
-        background: var(--card-bg);
-        box-shadow: var(--shadow);
-        cursor: pointer;
-        transition: 0.2s ease;
-        user-select: none;
-    }
+    /* --- Global Menu --- */
+    .menu-container{position:fixed;top:18px;right:22px;z-index:500}
+    .menu-button{font-size:26px;padding:6px 10px;border-radius:12px;background:var(--card-bg);box-shadow:0 2px 8px var(--shadow);cursor:pointer;transition:0.2s ease;user-select:none}
+    .menu-button:hover{background:var(--hover);transform:scale(1.05)}
+    .menu-dropdown{position:absolute;right:0;margin-top:8px;width:170px;background:var(--card-bg);border-radius:14px;padding:6px 0;box-shadow:0 6px 18px var(--shadow-strong);display:none;animation:fadeIn 0.15s ease}
+    .menu-item{padding:12px 18px;font-size:15px;cursor:pointer;transition:0.2s;color:var(--text);text-decoration:none;display:block}
+    .menu-item:hover{background:var(--hover)}
 
-    .menu-button:hover {
-        background: var(--hover);
-        transform: scale(1.05);
-    }
+    @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 
-    .menu-dropdown {
-        position: absolute;
-        right: 0;
-        margin-top: 8px;
-        width: 170px;
-        background: var(--card-bg);
-        border-radius: 14px;
-        padding: 6px 0;
-        box-shadow: var(--shadow-strong);
-        display: none;
-        animation: fadeIn 0.15s ease;
-    }
+    /* --- Header --- */
+    header{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 25px var(--shadow-strong);border-radius:0 0 25px 25px}
+    header h1{font-size:1.8rem;font-weight:700}
 
-    @keyframes fadeIn {
-        from {opacity: 0; transform: translateY(-6px);}
-        to {opacity: 1; transform: translateY(0);}
-    }
+    /* --- Main & Card --- */
+    main{padding:2rem 1rem;max-width:900px;margin:0 auto;animation:fadeIn 0.6s ease}
+    .card{background:var(--card-bg);border-radius:20px;padding:2rem;border:1px solid var(--border);box-shadow:0 8px 25px var(--shadow);margin-bottom:2rem;transition:transform 0.2s ease,box-shadow 0.2s ease;text-align:center}
+    .card:hover{transform:translateY(-4px);box-shadow:0 12px 40px var(--shadow-strong)}
 
-    .menu-item {
-        padding: 12px 18px;
-        font-size: 15px;
-        cursor: pointer;
-        transition: 0.2s;
-        color: var(--text);
-        text-decoration: none;
-        display: block;
-    }
+    /* --- Buttons & Inputs --- */
+    .btn{background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;border:none;border-radius:12px;padding:12px 24px;font-size:1rem;cursor:pointer;font-weight:600;display:inline-block;transition:all 0.25s ease;box-shadow:0 6px 14px rgba(0,227,255,0.4);text-decoration:none}
+    .btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,227,255,0.5)}
 
-    .menu-item:hover {
-        background: var(--hover);
+    input, textarea, select.dropdown {
+      width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--card-bg);color:var(--text);margin-bottom:16px;outline:none;transition:all 0.3s ease;font-size:1rem
     }
+    input:focus, textarea:focus, select.dropdown:focus{border-color:var(--accent1);box-shadow:0 0 12px var(--accent1)}
+
+    /* --- Back Button --- */
+    .back-btn{background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;border-radius:12px;padding:10px 18px;font-weight:600;text-decoration:none;box-shadow:0 5px 18px rgba(0,224,255,0.35);display:inline-block;margin-top:12px}
+    .back-btn:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 10px 25px rgba(0,224,255,0.45)}
+
+    @media(max-width:768px){.card{padding:1.5rem}.btn,.back-btn{width:100%}}
+    @media(max-width:480px){header h1{font-size:1.5rem}}
   </style>
 </head>
 
 <body>
-
-  <!-- 3 DOTS MENU -->
+  <!-- Menu -->
   <div class="menu-container">
-      <div class="menu-button">⋮</div>
-      <div class="menu-dropdown">
-          <a href="{{ url_for('home') }}" class="menu-item">Home</a>
-          <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
-          <a href="{{ url_for('mytasks') }}" class="menu-item">My Tasks</a>
-	  <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
-          <div class="menu-item theme-toggle">Toggle Theme</div>
-          <a href="{{ url_for('logout') }}" class="menu-item">Logout</a>
-      </div>
+    <div class="menu-button">⋮</div>
+    <div class="menu-dropdown">
+      <a href="{{ url_for('home') }}" class="menu-item">Home</a>
+      <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
+      <a href="{{ url_for('mytasks') }}" class="menu-item">My Tasks</a>
+      <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
+      <div class="menu-item theme-toggle">Toggle Theme</div>
+      <a href="{{ url_for('logout') }}" class="menu-item">Logout</a>
+    </div>
   </div>
 
   <header>
@@ -106,34 +105,13 @@
     </div>
   </main>
 
-  <!-- THEME + MENU SCRIPT -->
   <script>
     const menuBtn = document.querySelector(".menu-button");
     const menuDropdown = document.querySelector(".menu-dropdown");
-
-    // Toggle menu
-    menuBtn.addEventListener("click", () => {
-        menuDropdown.style.display =
-          menuDropdown.style.display === "block" ? "none" : "block";
-    });
-
-    // Close when clicking outside
-    document.addEventListener("click", (e) => {
-        if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
-            menuDropdown.style.display = "none";
-        }
-    });
-
-    // Theme toggle
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
-
-    document.querySelector(".theme-toggle").addEventListener("click", () => {
-        const current = document.documentElement.getAttribute("data-theme");
-        const next = current === "dark" ? "light" : "dark";
-        document.documentElement.setAttribute("data-theme", next);
-        localStorage.setItem("theme", next);
-    });
+    menuBtn.addEventListener("click", ()=>{menuDropdown.style.display=menuDropdown.style.display==="block"?"none":"block"});
+    document.addEventListener("click",(e)=>{if(!menuBtn.contains(e.target)&&!menuDropdown.contains(e.target)){menuDropdown.style.display="none"}});
+    const savedTheme=localStorage.getItem("theme");if(savedTheme)document.documentElement.setAttribute("data-theme",savedTheme);
+    document.querySelector(".theme-toggle").addEventListener("click",()=>{const current=document.documentElement.getAttribute("data-theme");const next=current==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",next);localStorage.setItem("theme",next)});
   </script>
 
 </body>

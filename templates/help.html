@@ -6,7 +6,6 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
   <style>
-
     :root {
       --accent1: #00c6ff;
       --accent2: #0072ff;
@@ -96,11 +95,14 @@
   </div>
 
   <header>
-  <a href="{{ url_for('home') }}" class="header-logo">
-    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
-    <span>Help & User Guide</span>
-  </a>  
+<header class="top-header">
+    <a href="https://to-do-list-1-2t27.onrender.com">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+    </a>
+    <h1 class="site-title">Help & User Guide</h1>
 </header>
+
+
   <main>
     <div class="card">
 

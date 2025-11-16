@@ -7,6 +7,23 @@
   <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
 
   <style>
+.top-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+.logo {
+    width: 40px;       /* change size if needed */
+    height: 40px;
+}
+
+.site-title {
+    font-size: 26px;
+    margin: 0;
+}
+
     :root {
       --accent1: #00c6ff;
       --accent2: #0072ff;
@@ -80,9 +97,12 @@
     </div>
   </div>
 
-  <header>
-    <h1>Edit Task</h1>
-  </header>
+<header class="top-header">
+    <a href="https://to-do-list-1-2t27.onrender.com">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+    </a>
+    <h1 class="site-title">Edit Task</h1>
+</header>
 
   <main>
     <div class="card">

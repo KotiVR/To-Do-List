@@ -27,6 +27,20 @@
       --hover: #333;
     }
 
+    /* --- Added Logo Styling --- */
+    .logo-container {
+      position: fixed;
+      top: 18px;
+      left: 22px;
+      z-index: 600;
+    }
+
+    .logo-container img {
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+    }
+
     /* --- Global Menu --- */
     .menu-container{position:fixed;top:18px;right:22px;z-index:500}
     .menu-button{font-size:26px;padding:6px 10px;border-radius:12px;background:var(--card-bg);box-shadow:0 2px 8px var(--shadow);cursor:pointer;transition:0.2s ease;user-select:none}
@@ -56,6 +70,13 @@
 </head>
 
 <body>
+
+  <!-- 🔵 Added Clickable Logo -->
+  <div class="logo-container">
+    <a href="https://to-do-list-1-2t27.onrender.com">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="logo">
+    </a>
+  </div>
 
   <!-- Menu -->
   <div class="menu-container">

@@ -5,6 +5,7 @@
   <title>Profile | ToDoList</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
+
   <style>
     :root {
       --accent1: #00c6ff;
@@ -27,6 +28,30 @@
       --hover: #333;
     }
 
+    /* --- Clickable Logo Top-Left --- */
+    .logo-container {
+      position: fixed;
+      top: 18px;
+      left: 22px;
+      z-index: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-container img {
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      border-radius: 12px;
+      transition: 0.2s ease;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    .logo-container img:hover {
+      transform: scale(1.05);
+    }
+
     /* --- Global Menu --- */
     .menu-container{position:fixed;top:18px;right:22px;z-index:500}
     .menu-button{font-size:26px;padding:6px 10px;border-radius:12px;background:var(--card-bg);box-shadow:0 2px 8px var(--shadow);cursor:pointer;transition:0.2s ease;user-select:none}
@@ -38,7 +63,14 @@
     @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 
     /* --- Header --- */
-    header{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 25px var(--shadow-strong);border-radius:0 0 25px 25px}
+    header{
+      background:linear-gradient(90deg,var(--accent1),var(--accent2));
+      color:#fff;padding:1rem 2rem;
+      display:flex;justify-content:center; /* center text since logo moved left */
+      align-items:center;
+      box-shadow:0 4px 25px var(--shadow-strong);
+      border-radius:0 0 25px 25px;
+    }
     header h1{font-size:1.8rem;font-weight:700}
 
     /* --- Main & Cards --- */
@@ -55,6 +87,14 @@
   </style>
 </head>
 <body>
+
+  <!-- Clickable Logo (Top-Left) -->
+  <div class="logo-container">
+  <a href="https://to-do-list-1-2t27.onrender.com">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="logo">
+    </a>
+  </div>
+
   <!-- Menu -->
   <div class="menu-container">
     <div class="menu-button">⋮</div>
@@ -87,14 +127,15 @@
   <button id="theme-toggle">🌗</button>
 
   <script>
-    const menuBtn = document.querySelector(".menu-button");
-    const menuDropdown = document.querySelector(".menu-dropdown");
+    const menuBtn=document.querySelector(".menu-button");
+    const menuDropdown=document.querySelector(".menu-dropdown");
     menuBtn.addEventListener("click",()=>{menuDropdown.style.display=menuDropdown.style.display==="block"?"none":"block"});
     document.addEventListener("click",(e)=>{if(!menuBtn.contains(e.target)&&!menuDropdown.contains(e.target)){menuDropdown.style.display="none"}});
-    const toggle = document.getElementById("theme-toggle");
-    const root = document.documentElement;
+    const toggle=document.getElementById("theme-toggle");
+    const root=document.documentElement;
     const saved=localStorage.getItem("theme");if(saved)root.setAttribute("data-theme",saved);
     toggle.addEventListener("click",()=>{const current=root.getAttribute("data-theme");const next=current==="dark"?"light":"dark";root.setAttribute("data-theme",next);localStorage.setItem("theme",next)});
   </script>
+
 </body>
 </html>

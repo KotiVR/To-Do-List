@@ -7,6 +7,47 @@
   <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
 
   <style>
+/* Clickable Logo Top-Left */
+.logo-container {
+  position: fixed;
+  top: 18px;
+  left: 22px;
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-container img {
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: 0.2s ease;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.logo-container img:hover {
+  transform: scale(1.05);
+}
+
+/* Centered header text */
+header {
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  color: #fff;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 25px var(--shadow-strong);
+  border-radius: 0 0 25px 25px;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
     :root {
       --accent1: #00c6ff;
       --accent2: #0072ff;
@@ -28,12 +69,6 @@
       --hover: #333;
     }
 
-    .logo {
-      height: 45px;
-      margin-right: 12px;
-      border-radius: 10px;
-    }
-
     /* --- Global Menu --- */
     .menu-container{position:fixed;top:18px;right:22px;z-index:500}
     .menu-button{font-size:26px;padding:6px 10px;border-radius:12px;background:var(--card-bg);box-shadow:0 2px 8px var(--shadow);cursor:pointer;transition:0.2s ease;user-select:none}
@@ -45,7 +80,7 @@
     @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 
     /* --- Header --- */
-    header{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;padding:1rem 2rem;display:flex;align-items:center;gap:15px;box-shadow:0 4px 25px var(--shadow-strong);border-radius:0 0 25px 25px}
+    header{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 25px var(--shadow-strong);border-radius:0 0 25px 25px}
     header h1{font-size:1.8rem;font-weight:700}
 
     /* --- Main & Card --- */
@@ -72,6 +107,17 @@
 </head>
 
 <body>
+<!-- Clickable Logo (Top-Left) -->
+<div class="logo-container">
+  <a href="https://to-do-list-1-2t27.onrender.com">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="logo">
+  </a>
+</div>
+
+<header>
+  <h1>Your Profile</h1>
+</header>
+
   <!-- Menu -->
   <div class="menu-container">
     <div class="menu-button">⋮</div>
@@ -86,12 +132,6 @@
   </div>
 
   <header>
-    <!-- ONLY THE IMAGE IS CLICKABLE -->
-    <a href="{{ url_for('home') }}">
-      <img src="{{ url_for('static', filename='logo.png') }}" class="logo">
-    </a>
-
-    <!-- TEXT IS NOT CLICKABLE -->
     <h1>Edit Task</h1>
   </header>
 

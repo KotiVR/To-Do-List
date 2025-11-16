@@ -29,7 +29,7 @@
       --hover: #333;
     }
 
-    /* Header — consistent layout (Logo Left, Title Center, Menu Right) */
+    /* Header (Logo Left, Title Center, Menu Right) */
     header {
       background: linear-gradient(90deg, var(--accent1), var(--accent2));
       padding: 1rem 2rem;
@@ -46,13 +46,14 @@
       box-shadow: 0 4px 25px var(--shadow-strong);
     }
 
-    /* Logo Left */
+    /* Logo Left INSIDE header */
     .logo-container {
       position: absolute;
-      left: 22px;
-      top: 14px;
+      left: 20px;
+      top: 10px;
       display: flex;
       align-items: center;
+      z-index: 999;
     }
     .logo-container img {
       width: 50px;
@@ -66,12 +67,13 @@
       margin: 0;
       font-weight: 700;
       text-align: center;
+      pointer-events: none;
     }
 
     /* Menu Right */
     .menu-container {
       position: absolute;
-      right: 22px;
+      right: 20px;
       top: 14px;
       z-index: 500;
     }
@@ -161,30 +163,33 @@
 
 <body>
 
-  <!-- Logo -->
-  <div class="logo-container">
-    <a href="https://to-do-list-1-2t27.onrender.com">
-      <img src="{{ url_for('static', filename='logo.png') }}" alt="logo">
-    </a>
-  </div>
-
   <!-- Header -->
   <header>
-    <h1>Help & User Guide</h1>
-  </header>
 
-  <!-- Menu -->
-  <div class="menu-container">
-    <div class="menu-button">⋮</div>
-    <div class="menu-dropdown">
-      <a href="{{ url_for('home') }}" class="menu-item">Home</a>
-      <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
-      <a href="{{ url_for('mytasks') }}" class="menu-item">My Tasks</a>
-      <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
-      <div class="menu-item theme-toggle">Toggle Theme</div>
-      <a href="{{ url_for('logout') }}" class="menu-item">Logout</a>
+    <!-- Logo inside header -->
+    <div class="logo-container">
+      <a href="{{ url_for('home') }}">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="logo">
+      </a>
     </div>
-  </div>
+
+    <!-- Title -->
+    <h1>Help & User Guide</h1>
+
+    <!-- Menu -->
+    <div class="menu-container">
+      <div class="menu-button">⋮</div>
+      <div class="menu-dropdown">
+        <a href="{{ url_for('home') }}" class="menu-item">Home</a>
+        <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
+        <a href="{{ url_for('mytasks') }}" class="menu-item">My Tasks</a>
+        <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
+        <div class="menu-item theme-toggle">Toggle Theme</div>
+        <a href="{{ url_for('logout') }}" class="menu-item">Logout</a>
+      </div>
+    </div>
+
+  </header>
 
   <!-- Main Content -->
   <main>

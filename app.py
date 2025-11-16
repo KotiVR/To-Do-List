@@ -17,48 +17,15 @@ def get_db_connection():
         cursor_factory=psycopg2.extras.RealDictCursor
     )
 
-# ------------------ HOME ------------------
-@app.route("/")
-def home():
+# ------------------ ROUTES ------------------
+@app.route("/sub.html")
+def sub():
     user = session.get("user")
     if not user:
         return redirect(url_for("login"))
+    return render_template("sub.html", user=user)
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
-    # Count pending tasks
-    cursor.execute(
-        'SELECT COUNT(*) FROM tasks WHERE "user_id"=%s AND status=%s',
-        (user["id"], "pending")
-    )
-    pending_tasks = cursor.fetchone()[0]
-
-    # Count completed tasks
-    cursor.execute(
-        'SELECT COUNT(*) FROM tasks WHERE "user_id"=%s AND status=%s',
-        (user["id"], "completed")
-    )
-    completed_tasks = cursor.fetchone()[0]
-
-    total_tasks = pending_tasks + completed_tasks
-    pending_percent = int((pending_tasks / total_tasks) * 100) if total_tasks else 0
-    completed_percent = int((completed_tasks / total_tasks) * 100) if total_tasks else 0
-
-    cursor.close()
-    conn.close()
-
-    return render_template(
-        "home.html",
-        user=user,
-        pending_tasks=pending_tasks,
-        completed_tasks=completed_tasks,
-        pending_tasks_percent=pending_percent,
-        completed_tasks_percent=completed_percent
-    )
-
-# ------------------ LOGOUT ------------------
-@app.route("/logout")
+@app.route("/logout", methods=["GET", "POST"])
 def logout():
     session.clear()
     flash("You have been logged out.")
@@ -108,10 +75,7 @@ def login():
 
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(
-            'SELECT * FROM users WHERE email=%s AND pass=%s',
-            (email, password)
-        )
+        cursor.execute('SELECT * FROM users WHERE email = %s AND pass = %s', (email, password))
         user = cursor.fetchone()
         cursor.close()
         conn.close()
@@ -131,19 +95,59 @@ def profile():
     user = session.get("user")
     if not user:
         return redirect(url_for("login"))
-
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT subscription_type FROM users WHERE email=%s', (user["email"],))
+    cursor.execute('SELECT subscription_type FROM users WHERE email = %s', (user["email"],))
     row = cursor.fetchone()
     cursor.close()
     conn.close()
-
     subscription_type = row["subscription_type"] if row and "subscription_type" in row else "Free"
     user["subscription_type"] = subscription_type
     return render_template("profile.html", user=user)
 
-# ------------------ CRUD TASKS ------------------
+# ------------------ HOME ------------------
+@app.route("/")
+def home():
+    user = session.get("user")
+    if not user:
+        return redirect(url_for("login"))
+    return render_template("home.html", user=user)
+
+# ------------------ TASKS PAGE ------------------
+@app.route("/")
+def home():
+    user = session.get("user")
+    if not user:
+        return redirect(url_for("login"))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Count pending tasks
+    cursor.execute('SELECT COUNT(*) FROM tasks WHERE "user_id"=%s AND status=%s', (user["id"], "pending"))
+    pending_tasks = cursor.fetchone()[0]
+
+    # Count completed tasks
+    cursor.execute('SELECT COUNT(*) FROM tasks WHERE "user_id"=%s AND status=%s', (user["id"], "completed"))
+    completed_tasks = cursor.fetchone()[0]
+
+    total_tasks = pending_tasks + completed_tasks
+    pending_percent = int((pending_tasks / total_tasks) * 100) if total_tasks else 0
+    completed_percent = int((completed_tasks / total_tasks) * 100) if total_tasks else 0
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "home.html",
+        user=user,
+        pending_tasks=pending_tasks,
+        completed_tasks=completed_tasks,
+        pending_tasks_percent=pending_percent,
+        completed_tasks_percent=completed_percent
+    )
+
+# ------------------ CRUD FOR TASKS ------------------
 @app.route("/add_task", methods=["POST"])
 def add_task():
     user = session.get("user")
@@ -163,7 +167,7 @@ def add_task():
     cursor.close()
     conn.close()
     flash("Task added!")
-    return redirect(url_for("home"))
+    return redirect(url_for("mytasks"))
 
 @app.route("/edit_task/<int:task_id>", methods=["GET", "POST"])
 def edit_task(task_id):
@@ -173,11 +177,11 @@ def edit_task(task_id):
 
     conn = get_db_connection()
     cursor = conn.cursor()
-
     if request.method == "POST":
         new_name = request.form.get("task_name")
         new_note = request.form.get("note")
         new_status = request.form.get("status")
+
         cursor.execute(
             'UPDATE tasks SET task_name=%s, note=%s, status=%s WHERE id=%s AND "user_id"=%s',
             (new_name, new_note, new_status, task_id, user["id"])
@@ -186,7 +190,7 @@ def edit_task(task_id):
         cursor.close()
         conn.close()
         flash("✅ Task updated successfully!")
-        return redirect(url_for("home"))
+        return redirect(url_for("mytasks"))
 
     cursor.execute('SELECT * FROM tasks WHERE id=%s AND "user_id"=%s', (task_id, user["id"]))
     task = cursor.fetchone()
@@ -194,7 +198,7 @@ def edit_task(task_id):
     conn.close()
     if not task:
         flash("Task not found.")
-        return redirect(url_for("home"))
+        return redirect(url_for("mytasks"))
     return render_template("edit_task.html", task=task, user=user)
 
 @app.route("/toggle_status/<int:task_id>", methods=["POST"])
@@ -211,7 +215,7 @@ def toggle_status(task_id):
         flash("Task not found.")
         cursor.close()
         conn.close()
-        return redirect(url_for("home"))
+        return redirect(url_for("mytasks"))
 
     new_status = "completed" if task["status"] == "pending" else "pending"
     cursor.execute('UPDATE tasks SET status=%s WHERE id=%s AND "user_id"=%s', (new_status, task_id, user["id"]))
@@ -219,7 +223,7 @@ def toggle_status(task_id):
     cursor.close()
     conn.close()
     flash(f"Task marked as {new_status}!")
-    return redirect(url_for("home"))
+    return redirect(url_for("mytasks"))
 
 @app.route("/delete_task/<int:task_id>", methods=["POST"])
 def delete_task(task_id):
@@ -234,9 +238,9 @@ def delete_task(task_id):
     cursor.close()
     conn.close()
     flash("Task deleted!")
-    return redirect(url_for("home"))
+    return redirect(url_for("mytasks"))
 
-# ------------------ API ------------------
+# ------------------ API ENDPOINTS ------------------
 @app.route("/api/tasks", methods=["GET"])
 def api_get_tasks():
     user = session.get("user")
@@ -248,7 +252,11 @@ def api_get_tasks():
     tasks = cursor.fetchall()
     cursor.close()
     conn.close()
-    return {"tasks": [{"id": t["id"], "task": t["task_name"], "status1": t["status"], "notes": t["note"]} for t in tasks]}
+    mapped_tasks = [
+        {"id": t["id"], "task": t["task_name"], "status1": t["status"], "notes": t["note"]}
+        for t in tasks
+    ]
+    return {"tasks": mapped_tasks}
 
 @app.route("/api/tasks", methods=["POST"])
 def api_post_tasks():
@@ -275,6 +283,6 @@ def api_post_tasks():
 def help_page():
     return render_template("help.html")
 
-# ------------------ RUN ------------------
+# ------------------ RUN APP ------------------
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=8080)

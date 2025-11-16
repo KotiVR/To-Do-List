@@ -7,6 +7,7 @@
   <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
 
   <style>
+
     :root {
       --accent1: #00c6ff;
       --accent2: #0072ff;
@@ -28,82 +29,149 @@
       --hover: #333;
     }
 
-    /* Logo */
+    /* Header — consistent layout (Logo Left, Title Center, Menu Right) */
+    header {
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      padding: 1rem 2rem;
+      height: 70px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      color: #fff;
+      position: relative;
+
+      border-radius: 0 0 25px 25px;
+      box-shadow: 0 4px 25px var(--shadow-strong);
+    }
+
+    /* Logo Left */
     .logo-container {
-      position: fixed;
-      top: 18px;
+      position: absolute;
       left: 22px;
-      z-index: 600;
+      top: 14px;
+      display: flex;
+      align-items: center;
     }
     .logo-container img {
-      width: 42px;
-      height: 42px;
+      width: 50px;
+      height: 50px;
       cursor: pointer;
     }
 
-    /* Global Menu */
-    .menu-container {position:fixed;top:18px;right:22px;z-index:500}
-    .menu-button {
-      font-size:26px;padding:6px 10px;border-radius:12px;background:var(--card-bg);
-      box-shadow:0 2px 8px var(--shadow);cursor:pointer;transition:0.2s ease;user-select:none
+    /* Title Center */
+    header h1 {
+      font-size: 1.9rem;
+      margin: 0;
+      font-weight: 700;
+      text-align: center;
     }
-    .menu-button:hover {background:var(--hover);transform:scale(1.05)}
+
+    /* Menu Right */
+    .menu-container {
+      position: absolute;
+      right: 22px;
+      top: 14px;
+      z-index: 500;
+    }
+    .menu-button {
+      font-size: 26px;
+      padding: 6px 10px;
+      border-radius: 12px;
+      background: var(--card-bg);
+      box-shadow: 0 2px 8px var(--shadow);
+      cursor: pointer;
+      transition: 0.2s ease;
+      user-select: none;
+    }
+    .menu-button:hover { background: var(--hover); transform: scale(1.05); }
     .menu-dropdown {
-      position:absolute;right:0;margin-top:8px;width:180px;background:var(--card-bg);
-      border-radius:14px;padding:6px 0;box-shadow:0 6px 18px var(--shadow-strong);
-      display:none;animation:fadeIn 0.15s ease
+      position: absolute;
+      right: 0;
+      margin-top: 8px;
+      width: 180px;
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 6px 0;
+      box-shadow: 0 6px 18px var(--shadow-strong);
+      display: none;
     }
     .menu-item {
-      padding:12px 18px;font-size:15px;cursor:pointer;transition:0.2s;color:var(--text);
-      text-decoration:none;display:block
+      padding: 12px 18px;
+      font-size: 15px;
+      cursor: pointer;
+      color: var(--text);
+      display: block;
+      text-decoration: none;
     }
-    .menu-item:hover {background:var(--hover)}
-    @keyframes fadeIn {from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+    .menu-item:hover { background: var(--hover); }
 
-    /* Header */
-    header {
-      background:linear-gradient(90deg,var(--accent1),var(--accent2));
-      color:#fff;padding:1rem 2rem;padding-left:80px;
-      display:flex;justify-content:center;align-items:center;
-      box-shadow:0 4px 25px var(--shadow-strong);
-      border-radius:0 0 25px 25px;
+    /* Main Area */
+    main {
+      padding: 2rem 1rem;
+      max-width: 900px;
+      margin: 0 auto;
+      animation: fadeIn 0.6s ease;
     }
-    header h1 {font-size:1.8rem;font-weight:700;margin:0;}
 
-    /* Page layout */
-    main {padding:2rem 1rem;max-width:900px;margin:0 auto;animation:fadeIn 0.6s ease}
     .card {
-      background:var(--card-bg);border-radius:20px;padding:2rem;border:1px solid var(--border);
-      box-shadow:0 8px 25px var(--shadow);margin-bottom:2rem;
-      transition:transform 0.2s ease,box-shadow 0.2s ease
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 2rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 25px var(--shadow);
+      margin-bottom: 2rem;
     }
-    .card:hover {transform:translateY(-4px);box-shadow:0 12px 40px var(--shadow-strong)}
 
-    /* Help text */
-    .help-section {margin-bottom:22px;line-height:1.65;font-size:15px}
-    .help-section h3 {margin-bottom:8px;font-size:20px}
+    .help-section {
+      margin-bottom: 22px;
+      line-height: 1.65;
+      font-size: 15px;
+    }
+    .help-section h3 {
+      margin-bottom: 8px;
+      font-size: 20px;
+    }
 
-    /* Back button */
+    /* Back Button */
     .back-btn {
-      background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;border-radius:12px;
-      padding:10px 18px;font-weight:600;text-decoration:none;box-shadow:0 5px 18px rgba(0,224,255,0.35);
-      display:inline-block;margin-top:12px
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 18px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 12px;
+      box-shadow: 0 5px 18px rgba(0,224,255,0.35);
     }
-    .back-btn:hover {transform:translateY(-2px) scale(1.02);box-shadow:0 10px 25px rgba(0,224,255,0.45)}
+    .back-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 10px 25px rgba(0,224,255,0.45);
+    }
 
-    @media(max-width:768px) {.card{padding:1.5rem}.back-btn{width:100%}}
-    @media(max-width:480px) {header h1{font-size:1.5rem}}
+    @media(max-width:480px) {
+      header h1 { font-size: 1.5rem; }
+      .logo-container img { width: 42px; height: 42px; }
+    }
+
   </style>
 </head>
 
 <body>
 
-  <!-- 🔵 Clickable Logo -->
+  <!-- Logo -->
   <div class="logo-container">
     <a href="https://to-do-list-1-2t27.onrender.com">
       <img src="{{ url_for('static', filename='logo.png') }}" alt="logo">
     </a>
   </div>
+
+  <!-- Header -->
+  <header>
+    <h1>Help & User Guide</h1>
+  </header>
 
   <!-- Menu -->
   <div class="menu-container">
@@ -118,11 +186,7 @@
     </div>
   </div>
 
-  <!-- Header -->
-  <header>
-    <h1>Help & User Guide</h1>
-  </header>
-
+  <!-- Main Content -->
   <main>
     <div class="card">
 
@@ -130,42 +194,42 @@
 
       <div class="help-section">
         <h3>1. Register an Account</h3>
-        <p>Go to the Register page and fill out the required details such as username, email, and password.</p>
+        <p>Create your account with username, email, and password.</p>
       </div>
 
       <div class="help-section">
         <h3>2. Login</h3>
-        <p>Enter your email & password on the login page. After logging in, you are redirected to the Home page.</p>
+        <p>Use your email & password to log in and access your dashboard.</p>
       </div>
 
       <div class="help-section">
         <h3>3. Creating a Task</h3>
-        <p>Click <strong>“Add Task”</strong>. Enter the task name and optional notes, then save it.</p>
+        <p>Press <strong>Add Task</strong>, enter the task name and optional notes, then save.</p>
       </div>
 
       <div class="help-section">
         <h3>4. Editing a Task</h3>
-        <p>Click a task → choose <strong>Edit</strong> → update the details.</p>
+        <p>Open any task → press <strong>Edit</strong> → update → save changes.</p>
       </div>
 
       <div class="help-section">
         <h3>5. Deleting a Task</h3>
-        <p>Click a task → press <strong>Delete</strong> to remove it permanently.</p>
+        <p>Open a task → press <strong>Delete</strong> to remove it permanently.</p>
       </div>
 
       <div class="help-section">
         <h3>6. Profile Page</h3>
-        <p>View your details and manage your account here.</p>
+        <p>View your details and manage your settings.</p>
       </div>
 
       <div class="help-section">
         <h3>7. Switching Theme</h3>
-        <p>Open the menu (⋮) → click <strong>Toggle Theme</strong>.</p>
+        <p>Open the menu (⋮) → choose <strong>Toggle Theme</strong>.</p>
       </div>
 
       <div class="help-section">
         <h3>8. Logout</h3>
-        <p>Use the Logout option in the menu to safely exit your account.</p>
+        <p>Open menu → click <strong>Logout</strong> to securely sign out.</p>
       </div>
 
       <a href="{{ url_for('home') }}" class="back-btn">← Back to Home</a>
@@ -173,29 +237,31 @@
     </div>
   </main>
 
-  <!-- Theme + Menu Script -->
+  <!-- Menu + Theme Script -->
   <script>
-    const menuBtn=document.querySelector(".menu-button");
-    const dropdown=document.querySelector(".menu-dropdown");
+    const menuBtn = document.querySelector(".menu-button");
+    const dropdown = document.querySelector(".menu-dropdown");
 
-    menuBtn.addEventListener("click",()=>{
-      dropdown.style.display = dropdown.style.display==="block" ? "none" : "block";
+    menuBtn.addEventListener("click", () => {
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
     });
 
-    document.addEventListener("click",(e)=>{
-      if(!menuBtn.contains(e.target) && !dropdown.contains(e.target)){
-        dropdown.style.display="none";
+    document.addEventListener("click", (e) => {
+      if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.style.display = "none";
       }
     });
 
-    const toggle=document.querySelector(".theme-toggle");
-    const savedTheme=localStorage.getItem("theme");
+    const toggle = document.querySelector(".theme-toggle");
+    const savedTheme = localStorage.getItem("theme");
 
-    if(savedTheme) document.documentElement.setAttribute("data-theme",savedTheme);
+    if (savedTheme) {
+      document.documentElement.setAttribute("data-theme", savedTheme);
+    }
 
-    toggle.addEventListener("click", ()=>{
-      const current=document.documentElement.getAttribute("data-theme");
-      const next=current==="dark" ? "light" : "dark";
+    toggle.addEventListener("click", () => {
+      const current = document.documentElement.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
       document.documentElement.setAttribute("data-theme", next);
       localStorage.setItem("theme", next);
     });

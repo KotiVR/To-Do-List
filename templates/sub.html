@@ -8,12 +8,12 @@
 
   <style>
 
+  /* -------- HEADER FIXED (Logo + Title Aligned) -------- */
   .top-header {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px;
-      padding-left: 80px;
+      gap: 12px;
+      padding: 12px 25px;
       background: linear-gradient(90deg, var(--accent1), var(--accent2));
       color: #fff;
       border-radius: 0 0 25px 25px;
@@ -21,13 +21,14 @@
   }
 
   .logo {
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       cursor: pointer;
+      object-fit: contain;
   }
 
   .site-title {
-      font-size: 26px;
+      font-size: 30px;
       margin: 0;
       font-weight: 700;
   }
@@ -107,7 +108,7 @@
     </div>
   </div>
 
-  <!-- Header with Logo -->
+  <!-- FIXED HEADER WITH LOGO + TITLE -->
   <header class="top-header">
       <a href="https://to-do-list-1-2t27.onrender.com">
           <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">

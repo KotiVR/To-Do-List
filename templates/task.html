@@ -8,9 +8,9 @@
 
   <style>
     .logo {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px; /* optional */
+      width: 45px;  /* adjust size here */
+      height: 45px;
+      border-radius: 10px;
     }
 
     :root {
@@ -45,21 +45,37 @@
 
     @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 
-    /* --- Header --- */
-    header{
-      background:linear-gradient(90deg,var(--accent1),var(--accent2));
-      color:#fff;
-      padding:1rem 2rem;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      box-shadow:0 4px 25px var(--shadow-strong);
-      border-radius:0 0 25px 25px;
+    /* --- FIXED PERFECT CENTER HEADER --- */
+    header {
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;  /* center title */
+      position: relative;       /* needed for absolute logo & menu */
+      box-shadow: 0 4px 25px var(--shadow-strong);
+      border-radius: 0 0 25px 25px;
     }
-    header h1{
-      font-size:1.8rem;
-      font-weight:700;
-      margin:0;
+
+    /* Logo left */
+    .header-left {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Title stays centered always */
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-align: center;
+      width: 100%;
     }
 
     /* --- Main & Cards --- */
@@ -67,48 +83,33 @@
     .card{background:var(--card-bg);border-radius:20px;padding:2rem;border:1px solid var(--border);box-shadow:0 8px 25px var(--shadow);margin-bottom:2rem;transition:transform 0.2s ease,box-shadow 0.2s ease}
     .card:hover{transform:translateY(-4px);box-shadow:0 12px 40px var(--shadow-strong)}
 
-    /* --- Inputs & Buttons --- */
-    input, textarea, select.dropdown {
-      width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--card-bg);color:var(--text);margin-bottom:16px;outline:none;transition:all 0.3s ease;font-size:1rem
+    input, textarea {
+      width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);
+      background:var(--card-bg);color:var(--text);margin-bottom:16px;outline:none;font-size:1rem
     }
-    input:focus, textarea:focus, select.dropdown:focus{border-color:var(--accent1);box-shadow:0 0 12px var(--accent1)}
 
     .btn, .status-btn, .edit-btn, .delete-btn {
       background:linear-gradient(135deg,var(--accent1),var(--accent2));
-      color:#fff;
-      border:none;
-      border-radius:12px;
-      padding:10px 18px;
-      font-size:1rem;
-      font-weight:600;
-      cursor:pointer;
-      text-decoration:none;
-      transition:all 0.25s ease;
-      box-shadow:0 6px 14px rgba(0,227,255,0.4);
+      color:#fff;border:none;border-radius:12px;padding:10px 18px;
+      font-size:1rem;font-weight:600;cursor:pointer;text-decoration:none;
+      transition:0.25s;box-shadow:0 6px 14px rgba(0,227,255,0.4);
       margin-right:6px;
     }
-    .btn:hover, .status-btn:hover, .edit-btn:hover, .delete-btn:hover {transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,227,255,0.5)}
 
-    /* --- Back Button --- */
     .back-btn{
-      background:linear-gradient(135deg,var(--accent1),var(--accent2));
-      color:#fff;
-      border-radius:12px;
-      padding:10px 18px;
-      font-weight:600;
-      text-decoration:none;
+      background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;border-radius:12px;
+      padding:10px 18px;font-weight:600;text-decoration:none;display:inline-block;margin-top:12px;
       box-shadow:0 5px 18px rgba(0,224,255,0.35);
-      display:inline-block;
-      margin-top:12px;
     }
-    .back-btn:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 10px 25px rgba(0,224,255,0.45)}
 
-    /* --- Task Rows --- */
-    .task-row{display:flex;justify-content:space-between;align-items:center;padding:12px;margin-bottom:8px;border-radius:12px;border:1px solid var(--border);background:var(--card-bg);box-shadow:0 4px 10px var(--shadow)}
+    .task-row{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:12px;margin-bottom:8px;border-radius:12px;
+      border:1px solid var(--border);background:var(--card-bg);
+      box-shadow:0 4px 10px var(--shadow)
+    }
+
     .completed-task{opacity:0.8}
-
-    @media(max-width:768px){.card{padding:1.5rem}.btn,.status-btn,.edit-btn,.delete-btn,.back-btn{width:100%;margin-bottom:8px}}
-    @media(max-width:480px){header h1{font-size:1.5rem}}
   </style>
 </head>
 
@@ -127,14 +128,15 @@
     </div>
   </div>
 
-  <!-- FIXED HEADER WITH LOGO -->
+  <!-- PERFECT CENTERED HEADER -->
   <header>
-    <div style="display:flex; align-items:center; gap:12px;">
+    <div class="header-left">
       <a href="https://to-do-list-1-2t27.onrender.com">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+        <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Logo">
       </a>
-      <h1>Your Tasks</h1>
     </div>
+
+    <h1>Your Tasks</h1>
   </header>
 
   <main>
@@ -192,11 +194,11 @@
   <button id="theme-toggle">🌗</button>
 
   <script>
-    const menuBtn = document.querySelector(".menu-button");
-    const menuDropdown = document.querySelector(".menu-dropdown");
+    const menuBtn=document.querySelector(".menu-button");
+    const menuDropdown=document.querySelector(".menu-dropdown");
 
     menuBtn.addEventListener("click",()=>{
-      menuDropdown.style.display = menuDropdown.style.display==="block" ? "none" : "block";
+      menuDropdown.style.display=menuDropdown.style.display==="block"?"none":"block";
     });
 
     document.addEventListener("click",(e)=>{
@@ -205,18 +207,18 @@
       }
     });
 
-    const toggle = document.getElementById("theme-toggle");
-    const root = document.documentElement;
-    const saved = localStorage.getItem("theme");
+    const toggle=document.getElementById("theme-toggle");
+    const saved=localStorage.getItem("theme");
 
-    if(saved) root.setAttribute("data-theme",saved);
+    if(saved) document.documentElement.setAttribute("data-theme",saved);
 
     toggle.addEventListener("click",()=>{
-      const current = root.getAttribute("data-theme");
-      const next = current==="dark" ? "light" : "dark";
-      root.setAttribute("data-theme",next);
+      const now=document.documentElement.getAttribute("data-theme");
+      const next=now==="dark"?"light":"dark";
+      document.documentElement.setAttribute("data-theme",next);
       localStorage.setItem("theme",next);
     });
   </script>
+
 </body>
 </html>

@@ -1,24 +1,29 @@
 /* ================================
-   🌊 ToDoFlow — Premium Cyan Theme v4
+   🌊 ToDoFlow — Premium Cyan-Teal Theme v4
    ================================ */
 
 /* --- Light Mode Colors --- */
 :root {
-  --bg: #f4fafb;
+  --bg: #e6f7fa;
   --text: #0f172a;
   --card-bg: rgba(255, 255, 255, 0.95);
   --accent1: #00e0ff;
   --accent2: #00b3c6;
+  --accent3: #00a8ff;
   --border: rgba(0, 0, 0, 0.1);
   --shadow: rgba(0, 0, 0, 0.08);
-  --shadow-strong: rgba(0,0,0,0.2);
+  --shadow-strong: rgba(0, 0, 0, 0.15);
   --pending: #00bcd4;
   --completed: #26c6da;
+  --hover: #d0f0fb;
+  --btn-hover: #00c8ff;
   --dropdown-bg: #ffffff;
   --dropdown-text: #0f172a;
   --dropdown-hover: #e0f7fa;
-  --hover: #e6faff;
-  --toast-bg: rgba(0,0,0,0.85);
+  --tooltip-bg: #00bcd4;
+  --tooltip-text: #fff;
+  --badge-pending: #00acc1;
+  --badge-completed: #26c6da;
 }
 
 /* --- Dark Mode Colors --- */
@@ -28,32 +33,37 @@
   --card-bg: rgba(14, 25, 38, 0.92);
   --accent1: #06e1ff;
   --accent2: #00b8d4;
+  --accent3: #00cfff;
   --border: rgba(255, 255, 255, 0.08);
   --shadow: rgba(0, 0, 0, 0.7);
-  --shadow-strong: rgba(255,255,255,0.1);
+  --shadow-strong: rgba(0, 0, 0, 0.85);
   --pending: #00e5ff;
   --completed: #29f1ff;
+  --hover: #102635;
+  --btn-hover: #00cfff;
   --dropdown-bg: #0e1a24;
   --dropdown-text: #e2e8f0;
-  --dropdown-hover: #102635;
-  --hover: #1a2a35;
-  --toast-bg: rgba(255,255,255,0.15);
+  --dropdown-hover: #1c2a36;
+  --tooltip-bg: #00bcd4;
+  --tooltip-text: #fff;
+  --badge-pending: #00e5ff;
+  --badge-completed: #29f1ff;
 }
 
 /* --- Global Reset --- */
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
   transition: all 0.3s ease;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  overflow-x: hidden;
+  line-height: 1.6;
 }
 
 /* --- Header --- */
@@ -64,40 +74,70 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.25);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  box-shadow: 0 4px 20px var(--shadow-strong);
+  border-radius: 0 0 20px 20px;
 }
 
 header h1 {
-  font-weight: 700;
+  font-weight: 800;
   font-size: 1.8rem;
+  letter-spacing: 1px;
 }
 
-header nav a,
-.nav-logout {
-  color: white;
-  text-decoration: none;
-  margin-left: 20px;
-  font-weight: 600;
-  opacity: 0.95;
-  transition: all 0.25s ease;
-  background: transparent;
-  border: none;
+/* --- Navigation Menu --- */
+.menu-container {
+  position: fixed;
+  top: 18px;
+  right: 22px;
+  z-index: 500;
+}
+
+.menu-button {
+  font-size: 26px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--card-bg);
+  box-shadow: 0 3px 12px var(--shadow);
   cursor: pointer;
+  transition: 0.3s ease;
+  user-select: none;
+}
+.menu-button:hover {
+  transform: scale(1.08);
+  box-shadow: 0 5px 18px var(--shadow-strong);
 }
 
-header nav a:hover,
-.nav-logout:hover {
-  opacity: 1;
-  transform: scale(1.08);
+.menu-dropdown {
+  position: absolute;
+  right: 0;
+  margin-top: 10px;
+  width: 180px;
+  background: var(--dropdown-bg);
+  border-radius: 16px;
+  padding: 8px 0;
+  box-shadow: 0 8px 28px var(--shadow-strong);
+  display: none;
+  animation: fadeIn 0.2s ease;
+}
+
+.menu-item {
+  padding: 12px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+  color: var(--dropdown-text);
+  text-decoration: none;
+  display: block;
+}
+.menu-item:hover {
+  background: var(--dropdown-hover);
+  transform: scale(1.02);
 }
 
 /* --- Main Container --- */
 main {
-  padding: 2rem 1rem;
-  max-width: 960px;
+  padding: 3rem 1rem;
+  max-width: 1000px;
   margin: 0 auto;
   animation: fadeIn 0.6s ease;
 }
@@ -105,165 +145,135 @@ main {
 /* --- Cards --- */
 .card {
   background: var(--card-bg);
-  border-radius: 20px;
-  padding: 2rem;
+  border-radius: 24px;
+  padding: 2.5rem;
   border: 1px solid var(--border);
-  box-shadow: 0 8px 25px var(--shadow);
-  backdrop-filter: blur(14px);
-  margin-bottom: 2rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 10px 30px var(--shadow);
+  backdrop-filter: blur(16px);
+  margin-bottom: 2.5rem;
+  transition: all 0.3s ease;
   position: relative;
 }
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 35px rgba(0, 227, 255, 0.25);
+  box-shadow: 0 12px 40px rgba(0, 224, 255, 0.3);
 }
 
-/* --- Card pseudo-elements for glow --- */
-.card::before {
-  content: '';
-  position: absolute;
-  top: -5px; left: -5px; right: -5px; bottom: -5px;
-  border-radius: 20px;
-  background: linear-gradient(45deg, var(--accent1), var(--accent2));
-  opacity: 0.15;
-  filter: blur(10px);
-  z-index: -1;
-  transition: opacity 0.3s ease;
-}
-.card:hover::before {
-  opacity: 0.35;
-}
-
-/* --- Headings --- */
+/* --- Titles & Headings --- */
 h2 {
-  margin-top: 0;
-  font-weight: 700;
+  font-weight: 800;
+  font-size: 1.6rem;
   color: var(--text);
   border-left: 5px solid var(--accent1);
-  padding-left: 10px;
+  padding-left: 12px;
   margin-bottom: 1rem;
-  position: relative;
 }
 
-/* --- Inputs & Forms --- */
-input,
-textarea,
-select {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.85);
-  color: var(--text);
-  margin-bottom: 14px;
+/* --- Paragraphs --- */
+p {
   font-size: 1rem;
-  outline: none;
-}
-
-[data-theme="dark"] input,
-[data-theme="dark"] textarea,
-[data-theme="dark"] select {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  border: 1px solid var(--accent1);
-  box-shadow: 0 0 12px var(--accent1);
+  margin-bottom: 1.2rem;
+  color: var(--text);
 }
 
 /* --- Buttons --- */
 .btn,
 button,
 input[type="submit"] {
-  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  background: linear-gradient(135deg, var(--accent1), var(--accent3));
   color: white;
   border: none;
-  border-radius: 12px;
-  padding: 12px 20px;
+  border-radius: 16px;
+  padding: 14px 22px;
   font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  font-weight: 600;
   text-decoration: none;
   display: inline-block;
-  transition: all 0.25s ease;
-  box-shadow: 0 6px 14px rgba(0, 227, 255, 0.4);
-  animation: glowPulse 3s infinite ease-in-out;
+  box-shadow: 0 6px 18px rgba(0, 224, 255, 0.35);
+  transition: all 0.3s ease;
 }
 .btn:hover,
 button:hover,
 input[type="submit"]:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0, 227, 255, 0.6);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 28px rgba(0, 224, 255, 0.45);
 }
 
-/* --- Status Buttons --- */
-.status-btn {
-  border: none;
+/* --- Status Badges --- */
+.badge {
+  padding: 6px 12px;
   border-radius: 999px;
-  padding: 8px 14px;
   font-weight: 600;
-  cursor: pointer;
+  font-size: 0.85rem;
   color: white;
-  transition: all 0.25s ease;
-}
-.status-btn.pending {
-  background: linear-gradient(135deg, var(--pending), var(--accent1));
-  box-shadow: 0 4px 10px rgba(0, 227, 255, 0.3);
-}
-.status-btn.completed {
-  background: linear-gradient(135deg, var(--accent1), var(--completed));
-  box-shadow: 0 4px 10px rgba(0, 238, 255, 0.4);
-}
-.status-btn:hover {
-  transform: translateY(-2px);
-  opacity: 0.9;
-}
-
-/* --- Delete / Edit Buttons --- */
-.delete-btn {
-  background: #13202b;
-  color: white;
-  border-radius: 999px;
-  padding: 8px 14px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  animation: glowPulse 4s infinite ease-in-out;
-}
-[data-theme="dark"] .delete-btn {
-  background: #1e2b35;
-}
-.delete-btn:hover {
-  transform: scale(1.05);
-  opacity: 0.9;
-}
-
-.edit-btn {
-  background: linear-gradient(135deg, var(--accent1), var(--accent2));
-  border-radius: 999px;
-  padding: 8px 14px;
-  font-weight: 600;
-  color: white;
-  text-decoration: none;
   display: inline-block;
-  box-shadow: 0 0 10px rgba(0, 238, 255, 0.3);
-  animation: glowPulse 4s infinite ease-in-out;
+  text-align: center;
+  margin-right: 6px;
+  transition: all 0.3s ease;
 }
-.edit-btn:hover {
-  opacity: 0.9;
-  transform: scale(1.05);
+.badge.pending {
+  background: var(--badge-pending);
+}
+.badge.completed {
+  background: var(--badge-completed);
 }
 
-/* --- Premium Dropdown --- */
+/* --- Inputs & Textarea --- */
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  color: var(--text);
+  outline: none;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--accent1);
+  box-shadow: 0 0 14px var(--accent1);
+}
+
+/* --- Tooltips --- */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: max-content;
+  background-color: var(--tooltip-bg);
+  color: var(--tooltip-text);
+  text-align: center;
+  border-radius: 12px;
+  padding: 6px 12px;
+  position: absolute;
+  z-index: 999;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* --- Dropdowns --- */
 select.dropdown {
   background-color: var(--dropdown-bg);
   color: var(--dropdown-text);
   border: 1px solid var(--accent1);
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 12px 16px;
   font-size: 1rem;
   font-weight: 500;
@@ -273,54 +283,66 @@ select.dropdown {
   background-repeat: no-repeat;
   background-position: right 14px center;
   background-size: 16px;
-  box-shadow: 0 0 10px rgba(0, 238, 255, 0.25);
-  transition: all 0.3s ease;
 }
 select.dropdown:hover {
   background-color: var(--dropdown-hover);
-  box-shadow: 0 0 20px rgba(0, 238, 255, 0.4);
+  box-shadow: 0 0 14px rgba(0, 224, 255, 0.25);
   transform: translateY(-1px);
 }
 select.dropdown:focus {
   border-color: var(--accent2);
-  box-shadow: 0 0 25px rgba(0, 238, 255, 0.8);
+  box-shadow: 0 0 22px rgba(0, 224, 255, 0.6);
 }
 select.dropdown option {
   background: var(--dropdown-bg);
   color: var(--dropdown-text);
-  padding: 10px;
   font-weight: 500;
 }
 
-/* --- Toast / Flash Messages --- */
-.toast {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: var(--toast-bg);
-  color: white;
-  padding: 14px 20px;
-  border-radius: 12px;
-  font-weight: 600;
-  box-shadow: 0 4px 16px var(--shadow);
-  z-index: 1000;
-  opacity: 0;
-  transform: translateY(-20px);
-  animation: toastShow 0.5s forwards;
+/* --- Animations --- */
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(10px);}
+  to {opacity: 1; transform: translateY(0);}
 }
-@keyframes toastShow {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(0, 224, 255, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(0, 224, 255, 0.7); }
+}
+
+/* --- Media Queries for Mobile --- */
+@media (max-width: 768px) {
+  header { padding: 1rem; border-radius: 0; }
+  main { padding: 2rem 1rem; }
+  .card { padding: 1.8rem; border-radius: 20px; }
+  .btn { width: 100%; text-align: center; }
+  .menu-button { font-size: 22px; padding: 6px 10px; }
+  .menu-dropdown { width: 150px; }
+  h2 { font-size: 1.4rem; }
+  p { font-size: 0.95rem; }
+}
+
+/* --- Footer & Back Button --- */
+.back-btn {
+  background: linear-gradient(135deg, var(--accent1), var(--accent3));
+  color: white;
+  border-radius: 14px;
+  padding: 10px 18px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 5px 18px rgba(0, 224, 255, 0.35);
+  transition: all 0.3s ease;
+}
+.back-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 224, 255, 0.45);
 }
 
 /* --- Dark Mode Toggle --- */
 #theme-toggle {
   position: fixed;
-  bottom: 22px;
-  right: 22px;
-  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, var(--accent1), var(--accent3));
   color: white;
   border: none;
   border-radius: 50%;
@@ -328,32 +350,13 @@ select.dropdown option {
   height: 50px;
   font-size: 1.3rem;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0, 238, 255, 0.4);
+  box-shadow: 0 4px 18px rgba(0, 224, 255, 0.4);
   transition: all 0.25s ease;
   animation: glowPulse 4s infinite ease-in-out;
 }
 #theme-toggle:hover {
-  transform: rotate(12deg) scale(1.05);
-  box-shadow: 0 0 25px rgba(0, 238, 255, 0.8);
+  transform: rotate(15deg) scale(1.05);
+  box-shadow: 0 0 28px rgba(0, 224, 255, 0.8);
 }
 
-/* --- Animations --- */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px);}
-  to { opacity: 1; transform: translateY(0);}
-}
-@keyframes glowPulse {
-  0%, 100% { box-shadow: 0 0 8px rgba(0, 238, 255, 0.4);}
-  50% { box-shadow: 0 0 18px rgba(0, 238, 255, 0.7);}
-}
-
-/* --- Mobile Responsive --- */
-@media (max-width: 768px) {
-  main { padding: 1rem; }
-  header { flex-direction: column; align-items: flex-start; padding: 1rem; }
-  header h1 { font-size: 1.4rem; margin-bottom: 0.5rem; }
-  header nav a, .nav-logout { margin-left: 0; margin-right: 10px; font-size: 0.9rem; }
-  .card { padding: 1.2rem; border-radius: 16px; margin-bottom: 1.5rem; }
-  .btn { padding: 10px 16px; font-size: 0.95rem; }
-  #theme-toggle { width: 44px; height: 44px; font-size: 1.1rem; }
-}
+/* ============================= END PREMIUM THEME ============================= */

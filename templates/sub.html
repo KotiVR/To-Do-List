@@ -18,6 +18,16 @@
       color: #fff;
       border-radius: 0 0 25px 25px;
       box-shadow: 0 4px 25px var(--shadow-strong);
+
+      /* ADDED FOR CENTERING */
+      position: relative;
+  }
+
+  .center-title {
+      /* ADDED FOR CENTERING */
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
   }
 
   .logo {
@@ -108,12 +118,13 @@
     </div>
   </div>
 
-  <!-- FIXED HEADER WITH LOGO + TITLE -->
+  <!-- FIXED HEADER WITH LOGO + CENTERED TITLE -->
   <header class="top-header">
       <a href="https://to-do-list-1-2t27.onrender.com">
           <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
       </a>
-      <h1 class="site-title">Subscriptions</h1>
+
+      <h1 class="site-title center-title">Subscriptions</h1>
   </header>
 
   <main>

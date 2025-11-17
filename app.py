@@ -18,7 +18,7 @@ def get_db_connection():
     )
 
 # ------------------ ROUTES ------------------
-@app.route("/sub.html")
+@app.route("/subscriptions")
 def sub():
     user = session.get("user")
     if not user:

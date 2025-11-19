@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Edit Profile | ToDoList</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
+
+  <style>
+    /* 3 DOTS MENU (same as other pages) */
+    .menu-container {
+      position: fixed;
+      top: 18px;
+      right: 22px;
+      z-index: 500;
+    }
+
+    .menu-button {
+      font-size: 26px;
+      padding: 6px 10px;
+      border-radius: 12px;
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: 0.2s ease;
+      user-select: none;
+    }
+
+    .menu-button:hover {
+      background: var(--accent1);
+      color: #fff;
+      transform: scale(1.05);
+    }
+
+    .menu-dropdown {
+      position: absolute;
+      right: 0;
+      margin-top: 8px;
+      width: 180px;
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 6px 0;
+      box-shadow: 0 6px 18px var(--shadow-strong);
+      display: none;
+      animation: fadeIn 0.15s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .menu-item {
+      padding: 12px 18px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.2s;
+      color: var(--text);
+      text-decoration: none;
+      display: block;
+    }
+
+    .menu-item:hover {
+      background: var(--accent1);
+      color: #fff;
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 0 0 25px 25px;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.25);
+    }
+
+    .logo-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      height: 38px;
+      width: auto;
+      border-radius: 8px;
+    }
+
+    header h1 { font-size: 1.8rem; }
+
+    main {
+      padding: 2rem 1rem;
+      max-width: 550px;
+      margin: 0 auto;
+      animation: fadeIn 0.6s ease;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 2rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 25px var(--shadow);
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+    }
+
+    .btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 14px rgba(0,227,255,0.4);
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0,227,255,0.5);
+    }
+
+    a { color: var(--accent1); font-weight: 600; text-decoration: none; }
+  </style>
+</head>
+
+<body>
+
+  <!-- MENU (synced) -->
+  <div class="menu-container">
+    <div class="menu-button">⋮</div>
+    <div class="menu-dropdown">
+      <a href="{{ url_for('home') }}" class="menu-item">Home</a>
+      <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
+      <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
+      <div class="menu-item theme-toggle">Toggle Theme</div>
+    </div>
+  </div>
+
+  <!-- HEADER (synced) -->
+  <header>
+    <div class="logo-title">
+      <img src="{{ url_for('static', filename='logo.png') }}" class="logo">
+      <h1>Edit Profile</h1>
+    </div>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>📝 Update Your Details</h2>
+
+      <form method="post" action="{{ url_for('edit_profile') }}">
+        <input type="text" name="name" placeholder="Your Name" required value="{{ user.name }}">
+        <input type="email" name="email" placeholder="Email" required value="{{ user.email }}">
+        <input type="password" name="password" placeholder="New Password (optional)">
+        <button class="btn" type="submit">Save Changes</button>
+      </form>
+
+      <p style="margin-top:15px;">
+        <a href="{{ url_for('profile') }}">← Back to Profile</a>
+      </p>
+    </div>
+  </main>
+
+  <!-- SCRIPT (same as other pages) -->
+  <script>
+    const menuBtn = document.querySelector(".menu-button");
+    const menuDropdown = document.querySelector(".menu-dropdown");
+
+    menuBtn.addEventListener("click", () => {
+      menuDropdown.style.display =
+        menuDropdown.style.display === "block" ? "none" : "block";
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
+        menuDropdown.style.display = "none";
+      }
+    });
+
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
+
+    document.querySelector(".theme-toggle").addEventListener("click", () => {
+      const current = document.documentElement.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+    });
+  </script>
+
+</body>
+</html>

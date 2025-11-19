@@ -106,7 +106,7 @@
       box-shadow: 0 8px 25px var(--shadow);
     }
 
-    input {
+    input, select {
       width: 100%;
       padding: 12px;
       margin: 10px 0;
@@ -169,6 +169,15 @@
         <input type="text" name="username" placeholder="Your Name" required value="{{ user.username }}">
         <input type="email" name="email" placeholder="Email" required value="{{ user.email }}">
         <input type="password" name="password" placeholder="New Password (optional)">
+        <input type="text" name="identity" placeholder="Designation" value="{{ user.identity }}">
+        <select name="gender">
+          <option value="">Select Gender</option>
+          <option value="Male" {% if user.gender == 'Male' %}selected{% endif %}>Male</option>
+          <option value="Female" {% if user.gender == 'Female' %}selected{% endif %}>Female</option>
+          <option value="Other" {% if user.gender == 'Other' %}selected{% endif %}>Other</option>
+        </select>
+        <input type="text" name="college" placeholder="College" value="{{ user.college }}">
+        <input type="text" name="company" placeholder="Company" value="{{ user.company }}">
         <button class="btn" type="submit">Save Changes</button>
       </form>
 

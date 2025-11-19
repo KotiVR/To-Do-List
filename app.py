@@ -109,30 +109,62 @@ def profile():
 
 @app.route("/edit_profile", methods=["GET", "POST"])
 def edit_profile():
-    user = get_current_user()  # fetch the logged-in user object
+    user = session.get("user")
+    if not user:
+        return redirect(url_for("login"))
 
     if request.method == "POST":
-        username = request.form.get("username")
-        email = request.form.get("email")
-        gender = request.form.get("gender")
+        new_username = request.form.get("username")
+        new_email = request.form.get("email")
+        new_pass = request.form.get("password") or None
+        new_identity = request.form.get("identity")
+        new_gender = request.form.get("gender")
+        new_college = request.form.get("college")
+        new_company = request.form.get("company")
 
-        try:
-            cur = db.cursor()
-            cur.execute("""
-                UPDATE users 
-                SET username=%s, email=%s, gender=%s
-                WHERE id=%s
-            """, (username, email, gender, user.id))
-            db.commit()
-            flash("Profile updated successfully!", "success")
-            return redirect(url_for("profile"))
+        conn = get_db_connection()
+        cur = conn.cursor()
 
-        except Exception as e:
-            db.rollback()
-            print("SQL ERROR:", e)  # prints the real error to console
-            return "Error updating profile", 500
+        cur.execute("""
+            UPDATE users
+            SET username = %s,
+                email = %s,
+                pass = COALESCE(%s, pass),
+                identity = %s,
+                gender = %s,
+                college = %s,
+                company = %s
+            WHERE id = %s
+        """, (
+            new_username,
+            new_email,
+            new_pass,
+            new_identity,
+            new_gender,
+            new_college,
+            new_company,
+            user["id"]
+        ))
 
-    return render_template("edit_profile.html", user=user)
+        conn.commit()
+
+        cur.execute("SELECT * FROM users WHERE id=%s", (user["id"],))
+        updated_user = cur.fetchone()
+
+        cur.close()
+        conn.close()
+
+        session["user"] = updated_user
+        return redirect(url_for("profile"))
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM users WHERE id=%s", (user["id"],))
+    current_user = cur.fetchone()
+    cur.close()
+    conn.close()
+
+    return render_template("edit_profile.html", user=current_user)
 
 
 # ------------------ HOME ------------------

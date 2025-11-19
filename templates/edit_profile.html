@@ -166,7 +166,7 @@
       <h2>📝 Update Your Details</h2>
 
       <form method="post" action="{{ url_for('edit_profile') }}">
-        <input type="text" name="name" placeholder="Your Name" required value="{{ user.name }}">
+        <input type="text" name="username" placeholder="Your Name" required value="{{ user.username }}">
         <input type="email" name="email" placeholder="Email" required value="{{ user.email }}">
         <input type="password" name="password" placeholder="New Password (optional)">
         <button class="btn" type="submit">Save Changes</button>

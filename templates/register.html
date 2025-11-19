@@ -1,184 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Register | ToDoList</title>
+  <meta charset="UTF-8">
+  <title>Subscription | ToDoList</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
+
   <style>
-    /* --- GLOBAL MENU STYLE --- */
-    .menu-container {
-      position: fixed;
-      top: 18px;
-      right: 22px;
-      z-index: 500;
-    }
 
-    .menu-button {
-      font-size: 26px;
-      padding: 6px 10px;
-      border-radius: 12px;
-      background: var(--card-bg);
-      box-shadow: var(--shadow);
-      cursor: pointer;
-      transition: 0.2s ease;
-      user-select: none;
-    }
-
-    .menu-button:hover {
-      background: var(--accent1);
-      color: #fff;
-      transform: scale(1.05);
-    }
-
-    .menu-dropdown {
-      position: absolute;
-      right: 0;
-      margin-top: 8px;
-      width: 180px;
-      background: var(--card-bg);
-      border-radius: 14px;
-      padding: 6px 0;
-      box-shadow: 0 6px 18px var(--shadow-strong);
-      display: none;
-      animation: fadeIn 0.15s ease;
-    }
-
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(10px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
-
-    .menu-item {
-      padding: 12px 18px;
-      font-size: 15px;
-      cursor: pointer;
-      transition: 0.2s;
-      color: var(--text);
-      text-decoration: none;
-      display: block;
-    }
-
-    .menu-item:hover {
-      background: var(--accent1);
-      color: #fff;
-    }
-
-    header {
+  /* -------- HEADER FIXED (Logo + Title Aligned) -------- */
+  .top-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 25px;
       background: linear-gradient(90deg, var(--accent1), var(--accent2));
       color: #fff;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       border-radius: 0 0 25px 25px;
-      box-shadow: 0 4px 25px rgba(0,0,0,0.25);
+      box-shadow: 0 4px 25px var(--shadow-strong);
+      position: relative;
+  }
+
+  .center-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+  }
+
+  .logo {
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      object-fit: contain;
+  }
+
+  .site-title {
+      font-size: 30px;
+      margin: 0;
+      font-weight: 700;
+  }
+
+    :root {
+      --accent1: #00c6ff;
+      --accent2: #0072ff;
+      --pending: #ff9800;
+      --completed: #4caf50;
+      --card-bg: #fefefe;
+      --text: #222;
+      --border: #e0e0e0;
+      --shadow: rgba(0,0,0,0.15);
+      --shadow-strong: rgba(0,0,0,0.25);
+      --hover: #e0f0ff;
     }
 
-    .logo-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    [data-theme="dark"] {
+      --card-bg: #1a1a1a;
+      --text: #eee;
+      --border: #2b2b2b;
+      --shadow: rgba(255,255,255,0.06);
+      --shadow-strong: rgba(255,255,255,0.1);
+      --hover: #333;
     }
 
-    .logo {
-      height: 38px;
-      width: auto;
-      border-radius: 8px;
+    /* ----- FIXED MENU (same style as help.html) ----- */
+    .menu-container{
+      position:fixed;
+      top:18px;
+      right:22px;
+      z-index:600; /* increased to match help.html */
     }
 
-    header h1 { font-size: 1.8rem; }
+    .menu-button{
+      font-size:26px;
+      padding:6px 10px;
+      border-radius:12px;
+      background:var(--card-bg);
+      box-shadow:0 2px 8px var(--shadow);
+      cursor:pointer;
+      transition:0.2s ease;
+      user-select:none
+    }
+    .menu-button:hover{
+      background:var(--hover);
+      transform:scale(1.05)
+    }
 
-    main { padding: 2rem 1rem; max-width: 500px; margin: 0 auto; animation: fadeIn 0.6s ease; }
-    .card { background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border); box-shadow: 0 8px 25px var(--shadow); }
-    .btn { background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: #fff; border: none; border-radius: 12px; padding: 12px 24px; font-size: 1rem; cursor: pointer; font-weight: 600; display: inline-block; transition: all 0.25s ease; box-shadow: 0 6px 14px rgba(0,227,255,0.4); }
-    .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,227,255,0.5); }
+    .menu-dropdown{
+      position:absolute;
+      right:0;
+      margin-top:8px;
+      width:180px;
+      background:var(--card-bg);
+      border-radius:14px;
+      padding:6px 0;
+      box-shadow:0 6px 18px var(--shadow-strong);
+      display:none;
+      animation:fadeIn 0.15s ease
+    }
 
-    input, select { width: 100%; padding: 10px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); }
-    textarea { width: 100%; padding: 10px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); resize: vertical; }
+    .menu-item{
+      padding:12px 18px;
+      font-size:15px;
+      cursor:pointer;
+      transition:0.2s;
+      color:var(--text);
+      text-decoration:none;
+      display:block
+    }
+    .menu-item:hover{background:var(--hover)}
 
-    .back-btn { display: inline-block; margin-top: 12px; text-decoration: none; color: var(--accent2); font-weight: 600; }
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(-6px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    /* Main */
+    main{
+      padding:2rem 1rem;
+      max-width:900px;
+      margin:0 auto;
+      animation:fadeIn 0.6s ease
+    }
+
+    .card{
+      background:var(--card-bg);
+      border-radius:20px;
+      padding:2rem;
+      border:1px solid var(--border);
+      box-shadow:0 8px 25px var(--shadow);
+      margin-bottom:2rem;
+      transition:transform 0.2s ease,box-shadow 0.2s ease
+    }
+    .card:hover{
+      transform:translateY(-4px);
+      box-shadow:0 12px 40px var(--shadow-strong)
+    }
+
+    .back-btn{
+      background:linear-gradient(135deg,var(--accent1),var(--accent2));
+      color:#fff;
+      border-radius:12px;
+      padding:10px 18px;
+      font-weight:600;
+      text-decoration:none;
+      box-shadow:0 5px 18px rgba(0,224,255,0.35);
+      display:inline-block;
+      margin-top:12px
+    }
+    .back-btn:hover{
+      transform:translateY(-2px) scale(1.02);
+      box-shadow:0 10px 25px rgba(0,224,255,0.45)
+    }
+
+    @media(max-width:768px){
+      .card{padding:1.5rem}
+      .back-btn{width:100%}
+    }
+    @media(max-width:480px){
+      .site-title{font-size:1.5rem}
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- 3 DOTS MENU -->
+  <!-- Menu -->
   <div class="menu-container">
-      <div class="menu-button">⋮</div>
-      <div class="menu-dropdown">
-          <a href="{{ url_for('home') }}" class="menu-item">Home</a>
-          <a href="{{ url_for('login') }}" class="menu-item">Login</a>
-          <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
-          <div class="menu-item theme-toggle">Toggle Theme</div>
-      </div>
+    <div class="menu-button">⋮</div>
+    <div class="menu-dropdown">
+      <a href="{{ url_for('home') }}" class="menu-item">Home</a>
+      <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
+      <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
+      <div class="menu-item theme-toggle">Toggle Theme</div>
+      <a href="{{ url_for('logout') }}" class="menu-item">Logout</a>
+    </div>
   </div>
 
-  <!-- HEADER WITH LOGO FIX -->
-  <header>
-    <div class="logo-title">
-      <img src="{{ url_for('static', filename='logo.png') }}" alt="logo" class="logo">
-      <h1>ToDoList</h1>
-    </div>
+  <!-- FIXED HEADER WITH LOGO + CENTERED TITLE -->
+  <header class="top-header">
+      <a href="https://to-do-list-1-2t27.onrender.com">
+          <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+      </a>
+
+      <h1 class="site-title center-title">Subscriptions(Beta Version)</h1>
   </header>
 
   <main>
     <div class="card">
-      <h2>📝 Register</h2>
-
-      <form method="post">
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="email" name="email" placeholder="Email" required>
-
-        <input type="password" name="password" placeholder="Password" required>
-        <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-
-        <input type="text" name="designation" placeholder="Designation (optional)">
-
-        <select name="gender">
-          <option value="">Select gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select>
-
-        <input type="text" name="college" placeholder="College (optional)">
-        <input type="text" name="company" placeholder="Company (optional)">
-
-        <input type="submit" value="Register" class="btn">
-      </form>
-
-      <p>
-        Already have an account?
-        <a href="{{ url_for('login') }}">Login</a>
-      </p>
+      <h2>Choose Your Plan</h2>
+      <h3>This is a Beta version (under progress)</h3>
+      <ul>
+        <li><strong>Free:</strong> Basic features, limited tasks</li>
+        <li><strong>Pro:</strong> Unlimited tasks, reminders</li>
+      </ul>
     </div>
+
+    <a href="{{ url_for('home') }}" class="back-btn">← Back to Home</a>
   </main>
 
-  <!-- THEME + MENU SCRIPT -->
+  <!-- Theme Script -->
   <script>
-    const menuBtn = document.querySelector(".menu-button");
-    const menuDropdown = document.querySelector(".menu-dropdown");
+    const menuBtn=document.querySelector(".menu-button");
+    const menuDropdown=document.querySelector(".menu-dropdown");
 
-    menuBtn.addEventListener("click", () => {
-        menuDropdown.style.display =
-          menuDropdown.style.display === "block" ? "none" : "block";
+    menuBtn.addEventListener("click",()=>{
+      menuDropdown.style.display=
+        menuDropdown.style.display==="block"?"none":"block";
     });
 
-    document.addEventListener("click", (e) => {
-        if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
-            menuDropdown.style.display = "none";
-        }
+    document.addEventListener("click",(e)=>{
+      if(!menuBtn.contains(e.target)&&!menuDropdown.contains(e.target)){
+        menuDropdown.style.display="none";
+      }
     });
 
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
+    const toggle=document.querySelector(".theme-toggle");
+    const savedTheme=localStorage.getItem("theme");
 
-    document.querySelector(".theme-toggle").addEventListener("click", () => {
-        const current = document.documentElement.getAttribute("data-theme");
-        const next = current === "dark" ? "light" : "dark";
-        document.documentElement.setAttribute("data-theme", next);
-        localStorage.setItem("theme", next);
+    if(savedTheme){
+      document.documentElement.setAttribute("data-theme",savedTheme);
+    }
+
+    toggle.addEventListener("click",()=>{
+      const current=document.documentElement.getAttribute("data-theme");
+      const next=current==="dark"?"light":"dark";
+      document.documentElement.setAttribute("data-theme",next);
+      localStorage.setItem("theme",next);
     });
   </script>
 

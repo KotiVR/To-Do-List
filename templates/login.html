@@ -7,12 +7,12 @@
   <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
 
   <style>
-    /* --- GLOBAL MENU STYLE --- */
+    /* --- GLOBAL MENU STYLE (MATCHED TO HELP.HTML) --- */
     .menu-container {
       position: fixed;
       top: 18px;
       right: 22px;
-      z-index: 500;
+      z-index: 600; /* same as help page */
     }
 
     .menu-button {
@@ -20,15 +20,14 @@
       padding: 6px 10px;
       border-radius: 12px;
       background: var(--card-bg);
-      box-shadow: var(--shadow);
+      box-shadow: 0 2px 8px var(--shadow);
       cursor: pointer;
       transition: 0.2s ease;
       user-select: none;
     }
 
     .menu-button:hover {
-      background: var(--accent1);
-      color: #fff;
+      background: var(--hover);
       transform: scale(1.05);
     }
 
@@ -46,7 +45,7 @@
     }
 
     @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(10px);}
+      from {opacity: 0; transform: translateY(-6px);}
       to {opacity: 1; transform: translateY(0);}
     }
 
@@ -61,8 +60,7 @@
     }
 
     .menu-item:hover {
-      background: var(--accent1);
-      color: #fff;
+      background: var(--hover);
     }
 
     /* HEADER FIXED WITH LOGO */

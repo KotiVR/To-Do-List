@@ -31,70 +31,69 @@
       --shadow-strong: rgba(255, 255, 255, 0.1);
     }
 
-    /* Menu Button */
+    /* MENU (MATCHING help.html EXACTLY) */
     .menu-container {
-      position: fixed;
-      top: 18px;
-      right: 22px;
-      z-index: 500;
+      position: absolute;
+      right: 25px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 600;
     }
 
     .menu-button {
-      font-size: 26px;
-      padding: 6px 10px;
-      border-radius: 12px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 10px;
       background: var(--card-bg);
       box-shadow: 0 2px 8px var(--shadow);
-      cursor: pointer;
-      transition: 0.2s ease;
       user-select: none;
+      transition: 0.2s ease;
     }
 
     .menu-button:hover {
+      transform: scale(1.1);
       background: var(--accent1);
-      color: #fff;
-      transform: scale(1.05);
+      color: white;
     }
 
     .menu-dropdown {
       position: absolute;
       right: 0;
       margin-top: 8px;
-      width: 180px;
       background: var(--card-bg);
-      border-radius: 14px;
-      padding: 6px 0;
-      box-shadow: 0 6px 18px var(--shadow-strong);
+      border-radius: 12px;
+      padding: 10px 0;
+      width: 180px;
+      box-shadow: 0 4px 18px var(--shadow-strong);
       display: none;
-      animation: fadeIn 0.15s ease;
     }
 
     .menu-item {
-      padding: 12px 18px;
-      font-size: 15px;
+      padding: 10px 16px;
       cursor: pointer;
-      transition: 0.2s;
-      color: var(--text);
+      transition: 0.2s ease;
+      font-size: 15px;
       text-decoration: none;
       display: block;
+      color: var(--text);
     }
 
     .menu-item:hover {
       background: var(--accent1);
-      color: #fff;
+      color: white;
     }
 
-    /* --------------------------- */
-    /* FIXED HEADER WITH CENTERED TITLE */
-    /* --------------------------- */
+    /* HEADER */
     header {
       background: linear-gradient(90deg, var(--accent1), var(--accent2));
       color: #fff;
       padding: 1rem 2rem;
       display: flex;
       align-items: center;
-      justify-content: center; /* center title */
-      position: relative;      /* allow absolute items */
+      justify-content: center;
+      position: relative;
       height: 75px;
       box-shadow: 0 4px 25px rgba(0, 0, 0, 0.25);
       border-radius: 0 0 25px 25px;
@@ -122,15 +121,6 @@
       font-weight: 700;
       color: white;
       text-decoration: none;
-    }
-
-    /* Center Title */
-    .center-title {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: white;
-      text-align: center;
-      pointer-events: none; /* cannot click center title */
     }
 
     /* Main Layout & Cards */
@@ -259,26 +249,26 @@
 
 <body>
 
-  <!-- Menu -->
-  <div class="menu-container">
-    <div class="menu-button">⋮</div>
-    <div class="menu-dropdown">
-      <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
-      <div class="menu-item theme-toggle">Toggle Theme</div>
-      <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
-      <a href="{{ url_for('logout') }}" class="menu-item">Logout</a>
-    </div>
-  </div>
-
-  <!-- Header -->
+  <!-- Header WITH MENU INSIDE (LIKE HELP PAGE) -->
   <header>
 
-    <!-- LOGO LEFT -->
+    <!-- LOGO -->
     <div class="logo-holder">
       <a href="{{ url_for('home') }}">
         <img src="{{ url_for('static', filename='logo.png') }}" class="logo">
       </a>
       <a href="{{ url_for('home') }}" class="logo-title">ToDoList</a>
+    </div>
+
+    <!-- MENU (MOVED HERE, MATCHING HELP PAGE EXACTLY) -->
+    <div class="menu-container">
+      <div class="menu-button">⋮</div>
+      <div class="menu-dropdown">
+        <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
+        <div class="menu-item theme-toggle">Toggle Theme</div>
+        <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
+        <a href="{{ url_for('logout') }}" class="menu-item">Logout</a>
+      </div>
     </div>
 
   </header>
@@ -330,7 +320,6 @@
       }
     });
 
-    // Theme save/load
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme) {
       document.documentElement.setAttribute("data-theme", savedTheme);

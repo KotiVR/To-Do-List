@@ -8,7 +8,7 @@
 
   <style>
     .logo {
-      width: 45px;  /* adjust size here */
+      width: 45px;
       height: 45px;
       border-radius: 10px;
     }
@@ -35,30 +35,76 @@
       --hover: #333;
     }
 
-    /* --- Global Menu --- */
-    .menu-container{position:fixed;top:18px;right:22px;z-index:500}
-    .menu-button{font-size:26px;padding:6px 10px;border-radius:12px;background:var(--card-bg);box-shadow:0 2px 8px var(--shadow);cursor:pointer;transition:0.2s ease;user-select:none}
-    .menu-button:hover{background:var(--hover);transform:scale(1.05)}
-    .menu-dropdown{position:absolute;right:0;margin-top:8px;width:180px;background:var(--card-bg);border-radius:14px;padding:6px 0;box-shadow:0 6px 18px var(--shadow-strong);display:none;animation:fadeIn 0.15s ease}
-    .menu-item{padding:12px 18px;font-size:15px;cursor:pointer;transition:0.2s;color:var(--text);text-decoration:none;display:block}
-    .menu-item:hover{background:var(--hover)}
+    /* EXACT HELP.HTML MENU */
+    .menu-container {
+      position: absolute;
+      right: 22px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+    }
 
-    @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+    .menu-button {
+      font-size: 26px;
+      padding: 6px 10px;
+      border-radius: 12px;
+      background: var(--card-bg);
+      box-shadow: 0 2px 8px var(--shadow);
+      cursor: pointer;
+      transition: 0.2s ease;
+      user-select: none;
+    }
 
-    /* --- FIXED PERFECT CENTER HEADER --- */
+    .menu-button:hover {
+      background: var(--hover);
+      transform: scale(1.06);
+    }
+
+    .menu-dropdown {
+      position: absolute;
+      right: 0;
+      margin-top: 10px;
+      width: 180px;
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 6px 0;
+      box-shadow: 0 6px 20px var(--shadow-strong);
+      display: none;
+      animation: fadeIn 0.15s ease;
+    }
+
+    .menu-item {
+      padding: 12px 18px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.2s ease;
+      color: var(--text);
+      text-decoration: none;
+      display: block;
+    }
+
+    .menu-item:hover {
+      background: var(--hover);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* PERFECT CENTERED HEADER */
     header {
       background: linear-gradient(90deg, var(--accent1), var(--accent2));
       color: #fff;
       padding: 1rem 2rem;
       display: flex;
       align-items: center;
-      justify-content: center;  /* center title */
-      position: relative;       /* needed for absolute logo & menu */
+      justify-content: center;
+      position: relative;
       box-shadow: 0 4px 25px var(--shadow-strong);
       border-radius: 0 0 25px 25px;
     }
 
-    /* Logo left */
     .header-left {
       position: absolute;
       left: 20px;
@@ -69,7 +115,6 @@
       gap: 10px;
     }
 
-    /* Title stays centered always */
     header h1 {
       margin: 0;
       font-size: 1.8rem;
@@ -78,65 +123,65 @@
       width: 100%;
     }
 
-    /* --- Main & Cards --- */
-    main{padding:2rem 1rem;max-width:900px;margin:0 auto;animation:fadeIn 0.6s ease}
-    .card{background:var(--card-bg);border-radius:20px;padding:2rem;border:1px solid var(--border);box-shadow:0 8px 25px var(--shadow);margin-bottom:2rem;transition:transform 0.2s ease,box-shadow 0.2s ease}
-    .card:hover{transform:translateY(-4px);box-shadow:0 12px 40px var(--shadow-strong)}
+    main { padding:2rem 1rem; max-width:900px; margin:0 auto; animation:fadeIn 0.6s ease }
+    .card{ background:var(--card-bg); border-radius:20px; padding:2rem; border:1px solid var(--border); box-shadow:0 8px 25px var(--shadow); margin-bottom:2rem; transition:0.2s }
+    .card:hover{ transform:translateY(-4px); box-shadow:0 12px 40px var(--shadow-strong) }
 
-    input, textarea {
-      width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);
-      background:var(--card-bg);color:var(--text);margin-bottom:16px;outline:none;font-size:1rem
+    input, textarea{
+      width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--border);
+      background:var(--card-bg); color:var(--text); margin-bottom:16px; outline:none; font-size:1rem;
     }
 
-    .btn, .status-btn, .edit-btn, .delete-btn {
-      background:linear-gradient(135deg,var(--accent1),var(--accent2));
-      color:#fff;border:none;border-radius:12px;padding:10px 18px;
-      font-size:1rem;font-weight:600;cursor:pointer;text-decoration:none;
-      transition:0.25s;box-shadow:0 6px 14px rgba(0,227,255,0.4);
-      margin-right:6px;
-    }
-
-    .back-btn{
-      background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;border-radius:12px;
-      padding:10px 18px;font-weight:600;text-decoration:none;display:inline-block;margin-top:12px;
-      box-shadow:0 5px 18px rgba(0,224,255,0.35);
+    .btn, .status-btn, .edit-btn, .delete-btn{
+      background:linear-gradient(135deg,var(--accent1),var(--accent2)); color:#fff; border:none;
+      border-radius:12px; padding:10px 18px; font-size:1rem; font-weight:600; cursor:pointer;
+      text-decoration:none; transition:0.25s; box-shadow:0 6px 14px rgba(0,227,255,0.4); margin-right:6px;
     }
 
     .task-row{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:12px;margin-bottom:8px;border-radius:12px;
-      border:1px solid var(--border);background:var(--card-bg);
-      box-shadow:0 4px 10px var(--shadow)
+      display:flex; justify-content:space-between; align-items:center;
+      padding:12px; margin-bottom:8px; border-radius:12px; border:1px solid var(--border);
+      background:var(--card-bg); box-shadow:0 4px 10px var(--shadow);
     }
 
-    .completed-task{opacity:0.8}
+    .back-btn{
+      background:linear-gradient(135deg,var(--accent1),var(--accent2)); color:#fff;
+      border-radius:12px; padding:10px 18px; font-weight:600; text-decoration:none; display:inline-block;
+      margin-top:12px; box-shadow:0 5px 18px rgba(0,224,255,0.35);
+    }
+
+    .completed-task{ opacity:0.8 }
   </style>
 </head>
 
 <body>
 
-  <!-- Menu -->
-  <div class="menu-container">
-    <div class="menu-button">⋮</div>
-    <div class="menu-dropdown">
-      <a href="{{ url_for('home') }}" class="menu-item">Home</a>
-      <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
-      <a href="{{ url_for('mytasks') }}" class="menu-item">My Tasks</a>
-      <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
-      <div class="menu-item theme-toggle">Toggle Theme</div>
-      <a href="{{ url_for('logout') }}" class="menu-item">Logout</a>
-    </div>
-  </div>
-
-  <!-- PERFECT CENTERED HEADER -->
+  <!-- HEADER WITH MENU INSIDE -->
   <header>
+
+    <!-- Left Logo -->
     <div class="header-left">
-      <a href="https://to-do-list-1-2t27.onrender.com">
-        <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Logo">
+      <a href="{{ url_for('home') }}">
+        <img src="{{ url_for('static', filename='logo.png') }}" class="logo">
       </a>
     </div>
 
+    <!-- Centered Title -->
     <h1>Your Tasks</h1>
+
+    <!-- 3 DOT MENU (MATCHES HELP.HTML) -->
+    <div class="menu-container">
+      <div class="menu-button">⋮</div>
+      <div class="menu-dropdown">
+        <a href="{{ url_for('home') }}" class="menu-item">Home</a>
+        <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
+        <a href="{{ url_for('mytasks') }}" class="menu-item">My Tasks</a>
+        <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
+        <div class="menu-item theme-toggle">Toggle Theme</div>
+        <a href="{{ url_for('logout') }}" class="menu-item">Logout</a>
+      </div>
+    </div>
+
   </header>
 
   <main>
@@ -151,17 +196,19 @@
       </form>
     </div>
 
-    <!-- Task List -->
+    <!-- Tasks -->
     <div class="card">
       <h2>Your Tasks</h2>
+
       {% if tasks %}
         {% for task in tasks %}
+
         <div class="task-row {% if task.status == 'completed' %}completed-task{% endif %}">
           <div>
             <strong>{{ task.task_name }}</strong><br>
             <small>{{ task.note }}</small><br>
             <small>Status:
-              <span style="color:{% if task.status == 'completed' %}#4caf50{% else %}#ff9800{% endif %};font-weight:bold">
+              <span style="color:{% if task.status == 'completed' %}#4caf50{% else %}#ff9800{% endif %}">
                 {{ task.status|capitalize }}
               </span>
             </small>
@@ -181,18 +228,18 @@
             </form>
           </div>
         </div>
+
         {% endfor %}
       {% else %}
         <p>No tasks added yet.</p>
       {% endif %}
+
     </div>
 
     <a href="{{ url_for('home') }}" class="back-btn">← Back to Home</a>
   </main>
 
-  <!-- Theme Toggle -->
-  <button id="theme-toggle">🌗</button>
-
+  <!-- JS -->
   <script>
     const menuBtn=document.querySelector(".menu-button");
     const menuDropdown=document.querySelector(".menu-dropdown");
@@ -212,7 +259,7 @@
 
     if(saved) document.documentElement.setAttribute("data-theme",saved);
 
-    toggle.addEventListener("click",()=>{
+    toggle?.addEventListener("click",()=>{
       const now=document.documentElement.getAttribute("data-theme");
       const next=now==="dark"?"light":"dark";
       document.documentElement.setAttribute("data-theme",next);

@@ -75,6 +75,18 @@
       box-shadow: 0 4px 25px rgba(0,0,0,0.25);
     }
 
+    .logo-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      height: 38px;
+      width: auto;
+      border-radius: 8px;
+    }
+
     header h1 { font-size: 1.8rem; }
 
     main { padding: 2rem 1rem; max-width: 500px; margin: 0 auto; animation: fadeIn 0.6s ease; }
@@ -91,13 +103,6 @@
 
 <body>
 
-  <!-- Clickable Logo (Top-Left) -->
-  <div class="logo-container">
-  <a href="https://to-do-list-1-2t27.onrender.com">
-      <img src="{{ url_for('static', filename='logo.png') }}" alt="logo">
-    </a>
-  </div>
-
   <!-- 3 DOTS MENU -->
   <div class="menu-container">
       <div class="menu-button">⋮</div>
@@ -109,8 +114,12 @@
       </div>
   </div>
 
+  <!-- HEADER WITH LOGO FIX -->
   <header>
-    <h1>ToDoList</h1>
+    <div class="logo-title">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="logo" class="logo">
+      <h1>ToDoList</h1>
+    </div>
   </header>
 
   <main>

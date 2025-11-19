@@ -66,7 +66,7 @@
     header{
       background:linear-gradient(90deg,var(--accent1),var(--accent2));
       color:#fff;padding:1rem 2rem;
-      display:flex;justify-content:center; /* center text since logo moved left */
+      display:flex;justify-content:center;
       align-items:center;
       box-shadow:0 4px 25px var(--shadow-strong);
       border-radius:0 0 25px 25px;
@@ -90,7 +90,7 @@
 
   <!-- Clickable Logo (Top-Left) -->
   <div class="logo-container">
-  <a href="https://to-do-list-1-2t27.onrender.com">
+    <a href="https://to-do-list-1-2t27.onrender.com">
       <img src="{{ url_for('static', filename='logo.png') }}" alt="logo">
     </a>
   </div>
@@ -100,7 +100,6 @@
     <div class="menu-button">⋮</div>
     <div class="menu-dropdown">
       <a href="{{ url_for('home') }}" class="menu-item">Home</a>
-      <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
       <a href="{{ url_for('mytasks') }}" class="menu-item">My Tasks</a>
       <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
       <div class="menu-item theme-toggle">Toggle Theme</div>
@@ -120,21 +119,37 @@
       <p><strong>Subscription:</strong> {{ user.subscription_type }}</p>
     </div>
 
-    <a href="{{ url_for('mytasks') }}" class="back-btn">← Back to Tasks</a>
+    <a href="https://to-do-list-1-2t27.onrender.com" class="back-btn">← Back to Home</a>
   </main>
 
-  <!-- Theme Toggle -->
-  <button id="theme-toggle">🌗</button>
 
+  <!-- JS -->
   <script>
+    /* --- Menu Toggle --- */
     const menuBtn=document.querySelector(".menu-button");
     const menuDropdown=document.querySelector(".menu-dropdown");
-    menuBtn.addEventListener("click",()=>{menuDropdown.style.display=menuDropdown.style.display==="block"?"none":"block"});
-    document.addEventListener("click",(e)=>{if(!menuBtn.contains(e.target)&&!menuDropdown.contains(e.target)){menuDropdown.style.display="none"}});
-    const toggle=document.getElementById("theme-toggle");
+
+    menuBtn.addEventListener("click",()=>{
+      menuDropdown.style.display = menuDropdown.style.display==="block" ? "none" : "block";
+    });
+
+    document.addEventListener("click",(e)=>{
+      if(!menuBtn.contains(e.target)&&!menuDropdown.contains(e.target)){
+        menuDropdown.style.display="none";
+      }
+    });
+
+    /* --- Theme Toggle inside Menu --- */
     const root=document.documentElement;
-    const saved=localStorage.getItem("theme");if(saved)root.setAttribute("data-theme",saved);
-    toggle.addEventListener("click",()=>{const current=root.getAttribute("data-theme");const next=current==="dark"?"light":"dark";root.setAttribute("data-theme",next);localStorage.setItem("theme",next)});
+    const savedTheme = localStorage.getItem("theme");
+    if(savedTheme) root.setAttribute("data-theme", savedTheme);
+
+    document.querySelector(".theme-toggle").addEventListener("click", ()=>{
+      const current = root.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+    });
   </script>
 
 </body>

@@ -19,7 +19,10 @@
       --shadow: rgba(0,0,0,0.15);
       --shadow-strong: rgba(0,0,0,0.25);
       --hover: #e0f0ff;
+
+      --menu-dot: #000;
     }
+
     [data-theme="dark"] {
       --card-bg: #1a1a1a;
       --text: #eee;
@@ -27,9 +30,10 @@
       --shadow: rgba(255,255,255,0.06);
       --shadow-strong: rgba(255,255,255,0.1);
       --hover: #333;
+
+      --menu-dot: #fff;
     }
 
-    /* Header (Logo Left, Title Center, Menu Right) */
     header {
       background: linear-gradient(90deg, var(--accent1), var(--accent2));
       padding: 1rem 2rem;
@@ -46,7 +50,6 @@
       box-shadow: 0 4px 25px var(--shadow-strong);
     }
 
-    /* Logo Left INSIDE header */
     .logo-container {
       position: absolute;
       left: 20px;
@@ -61,7 +64,6 @@
       cursor: pointer;
     }
 
-    /* Title Center */
     header h1 {
       font-size: 1.9rem;
       margin: 0;
@@ -70,24 +72,43 @@
       pointer-events: none;
     }
 
-    /* Menu Right */
     .menu-container {
       position: absolute;
       right: 20px;
       top: 14px;
       z-index: 500;
     }
+
     .menu-button {
-      font-size: 26px;
-      padding: 6px 10px;
+      width: 34px;
+      height: 34px;
       border-radius: 12px;
       background: var(--card-bg);
       box-shadow: 0 2px 8px var(--shadow);
       cursor: pointer;
       transition: 0.2s ease;
       user-select: none;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      position: relative;
     }
-    .menu-button:hover { background: var(--hover); transform: scale(1.05); }
+
+    .menu-button::before {
+      content: "⋮";
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--menu-dot);
+      line-height: 0;
+    }
+
+    .menu-button:hover { 
+      background: var(--hover); 
+      transform: scale(1.05); 
+    }
+
     .menu-dropdown {
       position: absolute;
       right: 0;
@@ -99,6 +120,7 @@
       box-shadow: 0 6px 18px var(--shadow-strong);
       display: none;
     }
+
     .menu-item {
       padding: 12px 18px;
       font-size: 15px;
@@ -109,7 +131,6 @@
     }
     .menu-item:hover { background: var(--hover); }
 
-    /* Main Area */
     main {
       padding: 2rem 1rem;
       max-width: 900px;
@@ -136,7 +157,6 @@
       font-size: 20px;
     }
 
-    /* Back Button */
     .back-btn {
       background: linear-gradient(135deg, var(--accent1), var(--accent2));
       color: #fff;
@@ -163,27 +183,26 @@
 
 <body>
 
-  <!-- Header -->
   <header>
 
-    <!-- Logo inside header -->
     <div class="logo-container">
       <a href="{{ url_for('home') }}">
         <img src="{{ url_for('static', filename='logo.png') }}" alt="logo">
       </a>
     </div>
 
-    <!-- Title -->
     <h1>Help & User Guide</h1>
 
-    <!-- Menu -->
     <div class="menu-container">
-      <div class="menu-button">⋮</div>
+      <div class="menu-button"></div>
       <div class="menu-dropdown">
         <a href="{{ url_for('home') }}" class="menu-item">Home</a>
         <a href="{{ url_for('profile') }}" class="menu-item">Profile</a>
         <a href="{{ url_for('mytasks') }}" class="menu-item">My Tasks</a>
-        <a href="{{ url_for('help_page') }}" class="menu-item">Help</a>
+
+        <!-- HELP PAGE REMOVED HERE -->
+        <!-- <a href="{{ url_for('help_page') }}" class="menu-item">Help</a> -->
+
         <div class="menu-item theme-toggle">Toggle Theme</div>
         <a href="{{ url_for('logout') }}" class="menu-item">Logout</a>
       </div>
@@ -191,7 +210,6 @@
 
   </header>
 
-  <!-- Main Content -->
   <main>
     <div class="card">
 
@@ -204,37 +222,37 @@
 
       <div class="help-section">
         <h3>2. Login</h3>
-        <p>Use your email & password to log in and access your dashboard.</p>
+        <p>Use your email & password to access your dashboard.</p>
       </div>
 
       <div class="help-section">
         <h3>3. Creating a Task</h3>
-        <p>Press <strong>Add Task</strong>, enter the task name and optional notes, then save.</p>
+        <p>Press <strong>Add Task</strong> → enter task → save.</p>
       </div>
 
       <div class="help-section">
         <h3>4. Editing a Task</h3>
-        <p>Open any task → press <strong>Edit</strong> → update → save changes.</p>
+        <p>Open a task → Edit → Save changes.</p>
       </div>
 
       <div class="help-section">
         <h3>5. Deleting a Task</h3>
-        <p>Open a task → press <strong>Delete</strong> to remove it permanently.</p>
+        <p>Open a task → Delete.</p>
       </div>
 
       <div class="help-section">
         <h3>6. Profile Page</h3>
-        <p>View your details and manage your settings.</p>
+        <p>View your details and settings.</p>
       </div>
 
       <div class="help-section">
         <h3>7. Switching Theme</h3>
-        <p>Open the menu (⋮) → choose <strong>Toggle Theme</strong>.</p>
+        <p>Open menu → <strong>Toggle Theme</strong>.</p>
       </div>
 
       <div class="help-section">
         <h3>8. Logout</h3>
-        <p>Open menu → click <strong>Logout</strong> to securely sign out.</p>
+        <p>Menu → Logout.</p>
       </div>
 
       <a href="{{ url_for('home') }}" class="back-btn">← Back to Home</a>
@@ -242,13 +260,14 @@
     </div>
   </main>
 
-  <!-- Menu + Theme Script -->
+
   <script>
     const menuBtn = document.querySelector(".menu-button");
     const dropdown = document.querySelector(".menu-dropdown");
 
     menuBtn.addEventListener("click", () => {
-      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+      dropdown.style.display =
+        dropdown.style.display === "block" ? "none" : "block";
     });
 
     document.addEventListener("click", (e) => {
@@ -260,9 +279,8 @@
     const toggle = document.querySelector(".theme-toggle");
     const savedTheme = localStorage.getItem("theme");
 
-    if (savedTheme) {
+    if (savedTheme)
       document.documentElement.setAttribute("data-theme", savedTheme);
-    }
 
     toggle.addEventListener("click", () => {
       const current = document.documentElement.getAttribute("data-theme");

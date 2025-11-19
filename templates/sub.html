@@ -18,13 +18,10 @@
       color: #fff;
       border-radius: 0 0 25px 25px;
       box-shadow: 0 4px 25px var(--shadow-strong);
-
-      /* ADDED FOR CENTERING */
       position: relative;
   }
 
   .center-title {
-      /* ADDED FOR CENTERING */
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
@@ -65,18 +62,65 @@
       --hover: #333;
     }
 
-    /* Menu */
-    .menu-container{position:fixed;top:18px;right:22px;z-index:500}
-    .menu-button{font-size:26px;padding:6px 10px;border-radius:12px;background:var(--card-bg);box-shadow:0 2px 8px var(--shadow);cursor:pointer;transition:0.2s ease;user-select:none}
-    .menu-button:hover{background:var(--hover);transform:scale(1.05)}
-    .menu-dropdown{position:absolute;right:0;margin-top:8px;width:180px;background:var(--card-bg);border-radius:14px;padding:6px 0;box-shadow:0 6px 18px var(--shadow-strong);display:none;animation:fadeIn 0.15s ease}
-    .menu-item{padding:12px 18px;font-size:15px;cursor:pointer;transition:0.2s;color:var(--text);text-decoration:none;display:block}
+    /* ----- FIXED MENU (same style as help.html) ----- */
+    .menu-container{
+      position:fixed;
+      top:18px;
+      right:22px;
+      z-index:600; /* increased to match help.html */
+    }
+
+    .menu-button{
+      font-size:26px;
+      padding:6px 10px;
+      border-radius:12px;
+      background:var(--card-bg);
+      box-shadow:0 2px 8px var(--shadow);
+      cursor:pointer;
+      transition:0.2s ease;
+      user-select:none
+    }
+    .menu-button:hover{
+      background:var(--hover);
+      transform:scale(1.05)
+    }
+
+    .menu-dropdown{
+      position:absolute;
+      right:0;
+      margin-top:8px;
+      width:180px;
+      background:var(--card-bg);
+      border-radius:14px;
+      padding:6px 0;
+      box-shadow:0 6px 18px var(--shadow-strong);
+      display:none;
+      animation:fadeIn 0.15s ease
+    }
+
+    .menu-item{
+      padding:12px 18px;
+      font-size:15px;
+      cursor:pointer;
+      transition:0.2s;
+      color:var(--text);
+      text-decoration:none;
+      display:block
+    }
     .menu-item:hover{background:var(--hover)}
 
-    @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(-6px)}
+      to{opacity:1;transform:translateY(0)}
+    }
 
     /* Main */
-    main{padding:2rem 1rem;max-width:900px;margin:0 auto;animation:fadeIn 0.6s ease}
+    main{
+      padding:2rem 1rem;
+      max-width:900px;
+      margin:0 auto;
+      animation:fadeIn 0.6s ease
+    }
 
     .card{
       background:var(--card-bg);
@@ -87,20 +131,34 @@
       margin-bottom:2rem;
       transition:transform 0.2s ease,box-shadow 0.2s ease
     }
-    .card:hover{transform:translateY(-4px);box-shadow:0 12px 40px var(--shadow-strong)}
+    .card:hover{
+      transform:translateY(-4px);
+      box-shadow:0 12px 40px var(--shadow-strong)
+    }
 
     .back-btn{
       background:linear-gradient(135deg,var(--accent1),var(--accent2));
-      color:#fff;border-radius:12px;
-      padding:10px 18px;font-weight:600;
+      color:#fff;
+      border-radius:12px;
+      padding:10px 18px;
+      font-weight:600;
       text-decoration:none;
       box-shadow:0 5px 18px rgba(0,224,255,0.35);
-      display:inline-block;margin-top:12px
+      display:inline-block;
+      margin-top:12px
     }
-    .back-btn:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 10px 25px rgba(0,224,255,0.45)}
+    .back-btn:hover{
+      transform:translateY(-2px) scale(1.02);
+      box-shadow:0 10px 25px rgba(0,224,255,0.45)
+    }
 
-    @media(max-width:768px){.card{padding:1.5rem}.back-btn{width:100%}}
-    @media(max-width:480px){.site-title{font-size:1.5rem}}
+    @media(max-width:768px){
+      .card{padding:1.5rem}
+      .back-btn{width:100%}
+    }
+    @media(max-width:480px){
+      .site-title{font-size:1.5rem}
+    }
   </style>
 </head>
 
@@ -146,7 +204,8 @@
     const menuDropdown=document.querySelector(".menu-dropdown");
 
     menuBtn.addEventListener("click",()=>{
-      menuDropdown.style.display=menuDropdown.style.display==="block"?"none":"block";
+      menuDropdown.style.display=
+        menuDropdown.style.display==="block"?"none":"block";
     });
 
     document.addEventListener("click",(e)=>{
